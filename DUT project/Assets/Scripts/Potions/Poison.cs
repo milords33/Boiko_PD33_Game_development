@@ -12,7 +12,7 @@ public class Poison : MonoBehaviour
 
         if (player != null)
         {
-            player.ReduceHitPoints(_poisonDamage);
+            player.TakeDamage(_poisonDamage);
             Destroy(gameObject);
         }
     }

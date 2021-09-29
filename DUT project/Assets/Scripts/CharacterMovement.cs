@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro;
 #region Лабораторная 1 (Виды передвижения)
 // case 1 - 2 transform.Traslate(normalize/deltaTime)
 /* 
@@ -67,22 +70,28 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
-    // Прыжок 
+    #region Элементы ответственные за прыжок
     [SerializeField] private float _jumpForce;
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private LayerMask _whatIsGround;
     [SerializeField] private LayerMask _whatIsCell;
+    #endregion
 
-    // Присесть
+    #region Элементы ответственные за приседание
     [SerializeField] private Collider2D _headCollider;
     [SerializeField] private float _headCheckerRadius;
     [SerializeField] private Transform _headChecker;
+    #endregion
 
-    [SerializeField] private int _hitPoints;
-    [SerializeField] private int _manaPoints;
+    [SerializeField] private int _maxHP;
+    [SerializeField] private int _maxMP;
 
+    [SerializeField] private EndLevelPortal _portalForEscape;
+
+    
     [Header("Animation")]
+    #region Анимации
     [SerializeField] private Animator _animator;
     [SerializeField] private string _walkAnimatorKey;
     [SerializeField] private string _jumpAnimatorKey;
@@ -90,8 +99,15 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private string _attackAnimatorKey;
     [SerializeField] private string _castAnimatorKey;
     [SerializeField] private string _hurtAnimatorKey;
+    #endregion
 
-    // Условия анимаций
+
+    [Header("UI")]
+    [SerializeField] private TMP_Text _coinsAmountText;
+    [SerializeField] private Slider _hpBar;
+    [SerializeField] private Slider _mpBar;
+
+
     private float _horizontalDirection;
     private float _verticalDirection;
     private bool _jump;
@@ -99,18 +115,52 @@ public class CharacterMovement : MonoBehaviour
     private bool _attack;
     private bool _cast;
     private bool _hurt;
+    private int _coinsAmount;
+    private int _currentHP;
+    private int _currentMP;
 
-    public bool CanClimb { get; set; }
+    public int CoinsAmount
+    {
+        get => _coinsAmount;
+        set
+        {
+            _coinsAmount = value;
+            _coinsAmountText.text = value.ToString();
+        }
+    }
+    public bool CanClimb  { private get; set; }
 
-    public int HitPoints { get; set; }
-    private int tempHitPoints;
-    public int ManaPoints { get; set; }
+    private bool checkEnoughMoney = false;
+
+    private int CurrentHP
+    {
+        get => _currentHP;
+        set
+        {
+            _currentHP = value;
+            _hpBar.value = _currentHP;
+        }
+    }
+    public int CurrentMP
+    {
+        get => _currentMP;
+        set
+        {
+            _currentMP = value;
+            _mpBar.value = _currentMP;
+        }
+    }
 
     private void Start()
     {
+        _hpBar.maxValue = _maxHP;
+        CurrentHP = _maxHP;
+
+        _mpBar.maxValue = _maxMP;
+        CurrentMP = _maxMP;
+
+        CoinsAmount = 0;
         _rigidbody = GetComponent<Rigidbody2D>();
-        HitPoints = _hitPoints;
-        tempHitPoints = HitPoints;
     }
     private void Update()
     {
@@ -136,20 +186,9 @@ public class CharacterMovement : MonoBehaviour
         _attack = Input.GetKey(KeyCode.Q);
         _cast = Input.GetKey(KeyCode.E);
 
-        if (HitPoints != tempHitPoints)
-        {
-            if (HitPoints > tempHitPoints)
-            {
-                tempHitPoints = HitPoints;
-            }
-            else
-            {
-                _hurt = true;
-                tempHitPoints = HitPoints;
-                Debug.Log("You received damage!");
-            }
-        }
-        
+        if(!checkEnoughMoney)
+            checkEnoughMoney = _portalForEscape.CompareCoins(CoinsAmount);
+
     }
 
     private void FixedUpdate()
@@ -190,17 +229,11 @@ public class CharacterMovement : MonoBehaviour
         _animator.SetBool(_hurtAnimatorKey, _hurt);
 
         if (_attack)
-        {
             _attack = false;
-        }
         if(_cast)
-        {
             _cast = false;
-        }
         if(_hurt)
-        {
             _hurt = false;
-        }
     }
 
     // Gizmos
@@ -214,23 +247,54 @@ public class CharacterMovement : MonoBehaviour
     // Взаимодействие с зельем здоровья
     public void AddHitPoints(int hitPoints)
     {
-        Debug.Log($"Hit points was raised {hitPoints}");
-        HitPoints += hitPoints;
-        Debug.Log($"Character HP = {HitPoints}");
+        Debug.Log($"Hit points started to grow");
+        int missingHP = _maxHP - CurrentHP;
+        int pointToAdd = missingHP > hitPoints ? hitPoints : missingHP;
+        StartCoroutine(RestoreHP(pointToAdd));
+    }
+
+    private IEnumerator RestoreHP(int pointsToAdd)
+    {
+        while(pointsToAdd !=0)
+        {
+            pointsToAdd --;
+            CurrentHP++;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private IEnumerator RestoreMP(int pointsToAdd)
+    {
+        while (pointsToAdd != 0)
+        {
+            pointsToAdd--;
+            CurrentMP++;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     public void AddManaPoints(int manaPoints)
     {
-        Debug.Log($"Mana points was raised  {manaPoints}");
-        ManaPoints += manaPoints;
-        Debug.Log("Character MP = " + manaPoints);
+        Debug.Log($"Mana started to grow");
+        int missingMP = _maxMP - CurrentMP;
+        int pointToAdd = missingMP > manaPoints ? manaPoints : missingMP;
+        StartCoroutine(RestoreMP(manaPoints));
     }
 
-    public void ReduceHitPoints(int damage)
+    public void TakeDamage(int damage)
     {
-        Debug.Log($"Hit points was reduced {damage}");
-        HitPoints -= damage;
-        Debug.Log("Character HP = " + HitPoints);
+        CurrentHP -= damage;
+        _hurt = true;
+        if (CurrentHP <= 0)
+        {
+            gameObject.SetActive(false);
+            Invoke(nameof(ReloadScene), 1f);
+        }
+    }
+
+    private void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }

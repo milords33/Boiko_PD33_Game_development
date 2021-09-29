@@ -10,14 +10,10 @@ public class MPPotion : MonoBehaviour
     {
         CharacterMovement player = other.GetComponent<CharacterMovement>();
 
-        if (player != null && player.ManaPoints != 100)
+        if (player != null)
         {
             player.AddManaPoints(_manaPoints);
             Destroy(gameObject);
-        }
-        else
-        {
-            Debug.Log("Impossible to use the potion");
         }
     }
 }

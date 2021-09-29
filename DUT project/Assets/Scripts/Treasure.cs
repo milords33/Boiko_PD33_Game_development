@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Treasure : MonoBehaviour
 {
+    [SerializeField] private int _coinsAmount;
 
     [SerializeField] Sprite _activeSprite;
 
@@ -13,9 +14,14 @@ public class Treasure : MonoBehaviour
 
     private Sprite _inactiveSprite;
 
-    private bool _activated;
+    public bool Activated { get; set; } = false;
 
-     void Start()
+    public bool CanBeActived { get; set; }
+
+
+
+
+    void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _inactiveSprite = _spriteRenderer.sprite;
@@ -25,11 +31,13 @@ public class Treasure : MonoBehaviour
     {
         CharacterMovement character = other.GetComponent<CharacterMovement>();
 
-        if(character != null && !_activated)
+        if(character != null && !Activated && CanBeActived)
         {
             _spriteRenderer.sprite = _activeSprite;
-            _activated = true;
-            Debug.Log("Treasure was activated!");//
+            Activated = true;
+            character.CoinsAmount += _coinsAmount;
+            Debug.Log("Treasure was activated!");
+            Debug.Log($"You found {_coinsAmount}");
         }
     }
 }

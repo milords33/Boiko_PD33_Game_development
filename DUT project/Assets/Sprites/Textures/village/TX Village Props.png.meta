@@ -676,7 +676,7 @@ TextureImporter:
     second: TX Village Props_88
   - first:
       213: -2332576712696041357
-    second: TX Village Props_89
+    second: portal_closed
   - first:
       213: -9127868951443763249
     second: TX Village Props_90
@@ -872,7 +872,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
@@ -884,7 +884,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 1
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -2758,7 +2758,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Village Props_89
+      name: portal_closed
       rect:
         serializedVersion: 2
         x: 103

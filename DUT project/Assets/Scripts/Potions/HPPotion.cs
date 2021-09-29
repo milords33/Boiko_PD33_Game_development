@@ -10,14 +10,10 @@ public class HPPotion : MonoBehaviour
     {
         CharacterMovement player = other.GetComponent<CharacterMovement>();
 
-        if (player != null && player.HitPoints != 100)
+        if (player != null)
         { 
             player.AddHitPoints(_hitPoints);  
             Destroy(gameObject);
-        }
-        else
-        {
-            Debug.Log("Impossible to use the potion");
         }
     }
 }
