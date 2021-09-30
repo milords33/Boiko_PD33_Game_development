@@ -5,57 +5,144 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 #region Лабораторная 1 (Виды передвижения)
-// case 1 - 2 transform.Traslate(normalize/deltaTime)
+// case 1 Translate
 /* 
-[SerializeField] private float _speed = 3.5f;
-void Update()
-{
-    if (Input.GetKey(KeyCode.D))
-    {
-        Motion(Vector2.right);
-    }
-    else if (Input.GetKey(KeyCode.A))
-    {
-        Motion(Vector2.left);
-    }
-}
+    [SerializeField] private Vector2 _direction;
+    [SerializeField] private float _speed;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
-private void Motion(Vector2 direction)
-{
-    // transform.Translate(direction * _speed * Time.deltaTime);
-    // или
-    // transform.Translate(direction.normalize * _speed);
-}
+    private void FixedUpdate()
+    {
+
+        if (_direction.x > 0 && _spriteRenderer.flipX)
+        {
+            _spriteRenderer.flipX = false;
+        }
+        else if (_direction.x < 0 && !_spriteRenderer.flipX)
+        {
+            _spriteRenderer.flipX = true;
+        }
+        float direction = Input.GetAxisRaw("Horizontal");
+        _direction.x = direction;
+        transform.Translate(_direction.normalized * _speed);
+    }
 */
 
-// case 3 AddForce
+// case 2 AddForce
 /*
 {
-public Rigidbody2D rb;
-public Vector2 direction;
-public float acceleration;
-    void FixedUpdate()
+    [SerializeField] private Vector2 _direction;
+    [SerializeField] private float _acceleration;
+    [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
+    private void FixedUpdate()
     {
-        rb.AddForce(direction.normalized * acceleration);
+        
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            _spriteRenderer.flipX = true;
+            _direction.x -= _acceleration;
+            
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            _spriteRenderer.flipX = false;
+            _direction.x += _acceleration;
+            
+        }
+        _rb.AddForce(_direction * _acceleration);
     }
-}
 */
-// case 4 transform.position Lerp
+// case 3 Impulse
 /*
-public Vector2 startPosition;
-public Vector2 endPosition;
-public float step;
-private float progress;
+    [SerializeField] private Vector2 _direction;
+    [SerializeField] private float _acceleration;
+    [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            _spriteRenderer.flipX = true;
+            _direction.x -= _acceleration;
+
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            _spriteRenderer.flipX = false;
+            _direction.x += _acceleration;
+
+        }
+        _rb.AddForce(_direction * _acceleration, ForceMode2D.Impulse);
+*/
+// case 4 Lerp
+/*
+    [SerializeField] Vector2 startPosition;
+    [SerializeField] Vector2 endPosition;
+    [SerializeField] private float step;
+    [SerializeField] private float progress;
+    [SerializeField] private Rigidbody2D _rigidbody;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
     void Start()
     {
         transform.position = startPosition;
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-    transform.position = Vector2.Lerp(startPosition, endPosition, progress);
-        progress += step;
+        float direction = Input.GetAxisRaw("Horizontal");
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+        {
+            startPosition = transform.position;
+            endPosition.x += direction;
+            //endPosition.y = 0;
+            transform.position = Vector2.Lerp(startPosition, endPosition, step);
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            startPosition = transform.position;
+            _spriteRenderer.flipX = true;
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            startPosition = transform.position;
+            _spriteRenderer.flipX = false;
+        }
+    }
+*/
+// case 5 In our project
+/*
+     private Rigidbody2D _rigidbody;
+    [SerializeField] private float _speed;  
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+     private float _direction;
+
+    void Start()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();  
+    }
+
+    void Update()
+    {
+        _direction = Input.GetAxisRaw("Horizontal");
+
+        if (_direction > 0 && _spriteRenderer.flipX)
+        {
+            _spriteRenderer.flipX = false;
+        }
+        else if (_direction < 0 && !_spriteRenderer.flipX)
+        {
+            _spriteRenderer.flipX = true;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        _rigidbody.velocity = new Vector2(_direction * _speed, _rigidbody.velocity.y);//x=1, y=0
     }
 */
 #endregion
