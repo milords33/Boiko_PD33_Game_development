@@ -186,6 +186,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private string _attackAnimatorKey;
     [SerializeField] private string _castAnimatorKey;
     [SerializeField] private string _hurtAnimatorKey;
+    [SerializeField] private string _deathAnimatorKey;
     #endregion
 
 
@@ -202,9 +203,12 @@ public class CharacterMovement : MonoBehaviour
     private bool _attack;
     private bool _cast;
     private bool _hurt;
-    private int _coinsAmount;
+    private bool _death;
     private int _currentHP;
     private int _currentMP;
+    private int _coinsAmount;
+
+    private float _lastPushTime;
 
     public int CoinsAmount
     {
@@ -247,39 +251,55 @@ public class CharacterMovement : MonoBehaviour
         CurrentMP = _maxMP;
 
         CoinsAmount = 0;
+        _death = false;
         _rigidbody = GetComponent<Rigidbody2D>();
     }
     private void Update()
     {
-        _verticalDirection = Input.GetAxisRaw("Vertical");
-
-        
-        _horizontalDirection = Input.GetAxisRaw("Horizontal");
-        _animator.SetFloat(_walkAnimatorKey, Mathf.Abs(_horizontalDirection));
-      
-        if (_horizontalDirection > 0 && _spriteRenderer.flipX)
+        if (!_death)
         {
-            _spriteRenderer.flipX = false;
+            _verticalDirection = Input.GetAxisRaw("Vertical");
+
+
+            _horizontalDirection = Input.GetAxisRaw("Horizontal");
+            _animator.SetFloat(_walkAnimatorKey, Mathf.Abs(_horizontalDirection));
+
+            if (_horizontalDirection > 0 && _spriteRenderer.flipX)
+            {
+                _spriteRenderer.flipX = false;
+            }
+            else if (_horizontalDirection < 0 && !_spriteRenderer.flipX)
+            {
+                _spriteRenderer.flipX = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                _jump = true;
+
+            _crawl = Input.GetKey(KeyCode.C);
+            _attack = Input.GetKey(KeyCode.Q);
+            _cast = Input.GetKey(KeyCode.E);
+
+            if (!checkEnoughMoney)
+                checkEnoughMoney = _portalForEscape.CompareCoins(CoinsAmount);
         }
-        else if(_horizontalDirection < 0 && !_spriteRenderer.flipX)
-        {  
-            _spriteRenderer.flipX = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            _jump = true;
-
-        _crawl = Input.GetKey(KeyCode.C);
-        _attack = Input.GetKey(KeyCode.Q);
-        _cast = Input.GetKey(KeyCode.E);
-
-        if(!checkEnoughMoney)
-            checkEnoughMoney = _portalForEscape.CompareCoins(CoinsAmount);
 
     }
 
     private void FixedUpdate()
     {
+        bool canJump = Physics2D.OverlapCircle(_groundChecker.position, _groundCheckerRadius, _whatIsGround);
+
+        if (_animator.GetBool(_hurtAnimatorKey))
+        {
+            if (Time.time - _lastPushTime > 0.2f && canJump)
+            {
+                _hurt = false;
+                _animator.SetBool(_hurtAnimatorKey, _hurt);
+            }
+            return;
+        }
+
         // передвижение
         _rigidbody.velocity = new Vector2(_horizontalDirection * _speed, _rigidbody.velocity.y);
 
@@ -294,7 +314,6 @@ public class CharacterMovement : MonoBehaviour
             _rigidbody.gravityScale = 2;
         }
 
-        bool canJump = Physics2D.OverlapCircle(_groundChecker.position, _groundCheckerRadius, _whatIsGround);
         bool canStand = !Physics2D.OverlapCircle(_headChecker.position, _headCheckerRadius, _whatIsCell);
 
         _headCollider.enabled = !_crawl && canStand;
@@ -313,14 +332,13 @@ public class CharacterMovement : MonoBehaviour
         _animator.SetBool(_crouchAnimatorKey, !_headCollider.enabled);
         _animator.SetBool(_attackAnimatorKey, _attack);
         _animator.SetBool(_castAnimatorKey, _cast);
-        _animator.SetBool(_hurtAnimatorKey, _hurt);
 
         if (_attack)
             _attack = false;
         if(_cast)
             _cast = false;
-        if(_hurt)
-            _hurt = false;
+        //if(_hurt)
+        //    _hurt = false;
     }
 
     // Gizmos
@@ -368,14 +386,28 @@ public class CharacterMovement : MonoBehaviour
         StartCoroutine(RestoreMP(manaPoints));
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, float pushPower = 0, float enemyPosX = 0)
     {
-        CurrentHP -= damage;
+        if (_animator.GetBool(_hurtAnimatorKey))
+            return;
+
         _hurt = true;
+
+        CurrentHP -= damage;
         if (CurrentHP <= 0)
         {
-            gameObject.SetActive(false);
-            Invoke(nameof(ReloadScene), 1f);
+            _speed = 0;
+            _death = true;
+            _animator.SetBool(_deathAnimatorKey, _death);
+            Invoke(nameof(ReloadScene), 0.9f);
+        }
+
+        if(pushPower != 0)
+        {
+            _lastPushTime = Time.time;
+            int direction = transform.position.x > enemyPosX ? 1 : 1;
+            _rigidbody.AddForce(new Vector2(direction * pushPower / 2, pushPower));
+            _animator.SetBool(_hurtAnimatorKey, _hurt);
         }
     }
 

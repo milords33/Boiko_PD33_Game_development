@@ -759,6 +759,7 @@ MonoBehaviour:
   _attackAnimatorKey: Attack
   _castAnimatorKey: Cast
   _hurtAnimatorKey: Hurt
+  _deathAnimatorKey: Deaths
   _coinsAmountText: {fileID: 9174000931832097819}
   _hpBar: {fileID: 1648601423382122083}
   _mpBar: {fileID: 4391941371646008337}
