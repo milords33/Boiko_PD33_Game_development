@@ -8,7 +8,7 @@ public class MPPotion : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CharacterMovement player = other.GetComponent<CharacterMovement>();
+        PlayerMover player = other.GetComponent<PlayerMover>();
 
         if (player != null)
         {

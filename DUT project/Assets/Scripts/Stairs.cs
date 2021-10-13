@@ -6,7 +6,7 @@ public class Stairs : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CharacterMovement player = other.GetComponent<CharacterMovement>();
+        PlayerMover player = other.GetComponent<PlayerMover>();
         if(player != null)
         {
             player.CanClimb = true;
@@ -15,7 +15,7 @@ public class Stairs : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        CharacterMovement player = other.GetComponent<CharacterMovement>();
+        PlayerMover player = other.GetComponent<PlayerMover>();
         if(player != null)
         {
             player.CanClimb = false;

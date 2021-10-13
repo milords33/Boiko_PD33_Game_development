@@ -23,8 +23,8 @@ public class Lever : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CharacterMovement character = other.GetComponent<CharacterMovement>();
-        if (character != null && !_activated)
+        PlayerMover player = other.GetComponent<PlayerMover>();
+        if (player != null && !_activated)
         {
             _treasure.CanBeActived = true;
             _spriteRenderer.sprite = _activeSprite;

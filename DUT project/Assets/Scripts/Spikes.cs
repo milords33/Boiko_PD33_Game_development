@@ -10,28 +10,28 @@ public class Spikes : MonoBehaviour
 
     private float _lastDamageTime;
 
-    private CharacterMovement _character;
+    private PlayerMover _player;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CharacterMovement character = other.GetComponent<CharacterMovement>();
-        if (character != null)
-            _character = character;
+        PlayerMover player = other.GetComponent<PlayerMover>();
+        if (player != null)
+            _player = player;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        CharacterMovement character = other.GetComponent<CharacterMovement>();
-        if (character == _character)
-            _character = null;
+        PlayerMover player = other.GetComponent<PlayerMover>();
+        if (player == _player)
+            _player = null;
     }
 
     private void Update()
     {
-        if (_character != null && Time.time - _lastDamageTime > _damageDelay)
+        if (_player != null && Time.time - _lastDamageTime > _damageDelay)
         {
             _lastDamageTime = Time.time;
-            _character.TakeDamage(_damage);
+            _player.TakeDamage(_damage);
         }
     }
 }

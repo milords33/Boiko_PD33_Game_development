@@ -13,8 +13,8 @@ public class EndLevelPortal : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CharacterMovement character = other.GetComponent<CharacterMovement>();
-        if (character != null && character.CoinsAmount >= _coinsToNextLevel)
+        PlayerMover player = other.GetComponent<PlayerMover>();
+        if (player != null && player.CoinsAmount >= _coinsToNextLevel)
         {
             _spriteRenderer.sprite = _openPortalsSprite;
             Invoke(nameof(LoadNextScene),0.3f);

@@ -29,13 +29,13 @@ public class Treasure : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        CharacterMovement character = other.GetComponent<CharacterMovement>();
+        PlayerMover player = other.GetComponent<PlayerMover>();
 
-        if(character != null && !Activated && CanBeActived)
+        if(player != null && !Activated && CanBeActived)
         {
             _spriteRenderer.sprite = _activeSprite;
             Activated = true;
-            character.CoinsAmount += _coinsAmount;
+            player.CoinsAmount += _coinsAmount;
             Debug.Log("Treasure was activated!");
             Debug.Log($"You found {_coinsAmount}");
         }
