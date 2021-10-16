@@ -25,7 +25,6 @@ public class MaskMan : MonoBehaviour
         }
     }
 
-
     private void Start()
     {
         _currentHitPoints = _maxHitPoints;

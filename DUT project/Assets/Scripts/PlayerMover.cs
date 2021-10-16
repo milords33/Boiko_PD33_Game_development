@@ -273,7 +273,6 @@ public class PlayerMover : MonoBehaviour
     {
         if (!_death)
         {
-           // #region Movement
             _verticalDirection = Input.GetAxisRaw("Vertical");
 
             _horizontalDirection = Input.GetAxisRaw("Horizontal");
@@ -298,7 +297,7 @@ public class PlayerMover : MonoBehaviour
             else
                 _crawl = false;
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && !CanAttackEnemy)
+            if (Input.GetKey(KeyCode.Mouse0) && !CanAttackEnemy)
             {
                 CanAttackEnemy = true;
                 _AttackRange.enabled = true;

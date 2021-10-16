@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ArrowLauncher : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ArrowLauncher : MonoBehaviour
     [SerializeField] private float _delay;
     [SerializeField] private int _damage;
     [SerializeField] private int _maxHitPoints;
+    [SerializeField] private Slider _hitPointsBar;
 
     private int _currentHitPoints;
 
@@ -20,11 +22,13 @@ public class ArrowLauncher : MonoBehaviour
         set
         {
             _currentHitPoints = value;
+            _hitPointsBar.value = _currentHitPoints;
         }
     }
 
     private void Start()
     {
+        _hitPointsBar.maxValue = _maxHitPoints;
         ChangeHp(_maxHitPoints);
     }
 
@@ -54,8 +58,9 @@ public class ArrowLauncher : MonoBehaviour
             Destroy(_arrowLauncher);
     }
 
-    private void ChangeHp(int hp)
+    private void ChangeHp(int hitPoints)
     {
-        _currentHitPoints = hp;
+        _currentHitPoints = hitPoints;
+        _hitPointsBar.value = hitPoints;
     }
 }

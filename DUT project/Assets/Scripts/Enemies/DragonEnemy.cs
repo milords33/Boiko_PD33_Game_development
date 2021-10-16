@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DragonEnemy : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class DragonEnemy : MonoBehaviour
     //[SerializeField] private AudioSource _shootSound;
     //[SerializeField] private AudioSource _hitSound;
 
-    //[SerializeField] private Slider _hpBar;
+    [SerializeField] private Slider _hpBar;
 
     private int _currentHitPoints;
     private bool _canShoot;
@@ -27,7 +28,7 @@ public class DragonEnemy : MonoBehaviour
 
     private void Start()
     {
-        //_hpBar.maxValue = _maxHp;
+        _hpBar.maxValue = _maxHitPoints;
         ChangeHp(_maxHitPoints);
     }
 
@@ -37,7 +38,7 @@ public class DragonEnemy : MonoBehaviour
         set
         {
             _currentHitPoints = value;
-            // _hpBar.value = _currentHP;
+            _hpBar.value = _currentHitPoints;
         }
     }
 
@@ -56,10 +57,10 @@ public class DragonEnemy : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, new Vector3(_attackRange * 2, 1, 0));
     }
 
-    private void ChangeHp(int hp)
+    private void ChangeHp(int hitPoints)
     {
-        _currentHitPoints = hp;
-        // _hpBar.value = hp;
+        _currentHitPoints = hitPoints;
+        _hpBar.value = hitPoints;
     }
 
     private void FixedUpdate()
