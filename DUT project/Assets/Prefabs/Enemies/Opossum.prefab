@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 5211489054930447517}
-  _opossum: {fileID: 5211489054930447518}
+  _enemySystem: {fileID: 5211489054930447518}
   _player: {fileID: 0}
   _viewingDistance: 5
   _speed: 5

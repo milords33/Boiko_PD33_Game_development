@@ -6,7 +6,7 @@ using UnityEngine;
 public class MaskMan : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidbody;
-    [SerializeField] private GameObject _maskMan;
+    [SerializeField] private GameObject _enemySystem;
     [SerializeField] private float _walkRange;
     [SerializeField] private float _speed;
     [SerializeField] private float _pushPower;
@@ -16,29 +16,16 @@ public class MaskMan : MonoBehaviour
 
     private Vector2 _startPostion;
     private int _currentHitPoints;
-    private int CurrentHitPoints
-    {
-        get => _currentHitPoints;
-        set
-        {
-            _currentHitPoints = value;
-        }
-    }
 
     private void Start()
     {
-        _currentHitPoints = _maxHitPoints;
+        ChangeHitPoints(_maxHitPoints);
         _startPostion = transform.position;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(_drawPostion, new Vector3(_walkRange * 2, 1, 0));
-    }
-
-    private void FixedUpdate()
-    {
-        _rigidbody.velocity = transform.right * _speed;
     }
 
     private void Update()
@@ -54,6 +41,20 @@ public class MaskMan : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        _rigidbody.velocity = transform.right * _speed;
+    }
+
+    private void ChangeHitPoints(int hitPoints)
+    {
+        _currentHitPoints = hitPoints;
+        if (_currentHitPoints <= 0)
+        {
+            Destroy(_enemySystem);
+        }
+    }
+
     private void Flip()
     {
         _faceRight = !_faceRight;
@@ -65,13 +66,7 @@ public class MaskMan : MonoBehaviour
         PlayerMover player = other.collider.GetComponent<PlayerMover>();
         if (player != null)
         {
-            if (player.CanAttackEnemy)
-                TakeDamage(player.AttackDamage);
-            else
-            {
-                //_animator.SetTrigger(_attackAnimatorKey);
                 player.TakeDamage(_damage, _pushPower, transform.position.x);
-            }
         }
     }
 
@@ -88,9 +83,6 @@ public class MaskMan : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        CurrentHitPoints -= damage;
-        //_hitSound.Play();
-        if (CurrentHitPoints <= 0)
-            Destroy(_maskMan);
+        ChangeHitPoints(_currentHitPoints - damage);
     }
 }

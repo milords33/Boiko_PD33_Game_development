@@ -8,7 +8,7 @@ public class Opossum : MonoBehaviour
     private Rigidbody2D _rigidbody;
 
     [SerializeField] private SpriteRenderer _spriteRenderer;
-    [SerializeField] private GameObject _opossum;
+    [SerializeField] private GameObject _enemySystem;
     [SerializeField] private Transform _player;
     [SerializeField] private float _viewingDistance;
     [SerializeField] private float _speed;
@@ -23,20 +23,10 @@ public class Opossum : MonoBehaviour
 
     private int _currentHitPoints;
 
-    private int CurrentHitPoints
-    {
-        get => _currentHitPoints;
-        set
-        {
-            _currentHitPoints = value;
-            _hitPointsBar.value = _currentHitPoints;
-        }
-    }
-
     void Start()
     {
         _hitPointsBar.maxValue = _maxHitPoints;
-        ChangeHp(_maxHitPoints);
+        ChangeHitPoints(_maxHitPoints);
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
@@ -61,18 +51,17 @@ public class Opossum : MonoBehaviour
         PlayerMover player = other.collider.GetComponent<PlayerMover>();
         if (player != null)
         {
-            if (player.CanAttackEnemy)
-                TakeDamage(player.AttackDamage);
-            else
-            {
                 player.TakeDamage(_damage, _pushPower, transform.position.x);
-            }
         }
     }
 
-    private void ChangeHp(int hitPoints)
+    private void ChangeHitPoints(int hitPoints)
     {
         _currentHitPoints = hitPoints;
+        if (_currentHitPoints <= 0)
+        {
+            Destroy(_enemySystem);
+        }
         _hitPointsBar.value = hitPoints;
     }
 
@@ -99,8 +88,6 @@ public class Opossum : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        CurrentHitPoints -= damage;
-        if (CurrentHitPoints <= 0)
-            Destroy(_opossum);
+        ChangeHitPoints(_currentHitPoints - damage);
     }
 }

@@ -354,13 +354,13 @@ MonoBehaviour:
   _whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  _dragon: {fileID: 825275582229546726}
+  _enemySystem: {fileID: 825275582229546726}
   _animator: {fileID: 825275583076972768}
   _attackRange: 8.24
   _fireShoot: {fileID: 9126486118228188345, guid: ac0856312b9f046638ef78de6e2705ae, type: 3}
   _faceRight: 1
   _maxHitPoints: 100
-  _hpBar: {fileID: 825275582405591313}
+  _hitPointsBar: {fileID: 825275582405591313}
 --- !u!95 &825275583076972768
 Animator:
   serializedVersion: 3

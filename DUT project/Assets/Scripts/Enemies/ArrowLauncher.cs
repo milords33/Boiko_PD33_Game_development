@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ArrowLauncher : MonoBehaviour
 {
-    [SerializeField] private GameObject _arrowLauncher;
+    [SerializeField] private GameObject _enemySystem;
     [SerializeField] private Transform _shootPoint;
     [SerializeField] private Arrow _arrowShoot;
     [SerializeField] private float _speed;
@@ -29,17 +29,7 @@ public class ArrowLauncher : MonoBehaviour
     private void Start()
     {
         _hitPointsBar.maxValue = _maxHitPoints;
-        ChangeHp(_maxHitPoints);
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        PlayerMover player = other.collider.GetComponent<PlayerMover>();
-        if (player != null)
-        {
-            if (player.CanAttackEnemy)
-                TakeDamage(player.AttackDamage);
-        }
+        ChangeHitPoints(_maxHitPoints);
     }
 
     private void Shoot()
@@ -53,14 +43,16 @@ public class ArrowLauncher : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        CurrentHitPoints -= damage;
-        if (CurrentHitPoints <= 0)
-            Destroy(_arrowLauncher);
+        ChangeHitPoints(_currentHitPoints - damage);
     }
 
-    private void ChangeHp(int hitPoints)
+    private void ChangeHitPoints(int hitPoints)
     {
         _currentHitPoints = hitPoints;
+        if (_currentHitPoints <= 0)
+        {
+            Destroy(_enemySystem);
+        }
         _hitPointsBar.value = hitPoints;
     }
 }

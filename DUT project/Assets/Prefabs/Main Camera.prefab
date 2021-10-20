@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
+  m_Follow: {fileID: 1624473290365331864, guid: 6b544a8f068204be3a02d9191d3df974, type: 3}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5

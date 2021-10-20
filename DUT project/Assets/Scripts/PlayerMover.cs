@@ -4,147 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
-#region Лабораторная 1 (Виды передвижения)
-// case 1 Translate
-/* 
-    [SerializeField] private Vector2 _direction;
-    [SerializeField] private float _speed;
-    [SerializeField] private SpriteRenderer _spriteRenderer;
 
-    private void FixedUpdate()
-    {
-
-        if (_direction.x > 0 && _spriteRenderer.flipX)
-        {
-            _spriteRenderer.flipX = false;
-        }
-        else if (_direction.x < 0 && !_spriteRenderer.flipX)
-        {
-            _spriteRenderer.flipX = true;
-        }
-        float direction = Input.GetAxisRaw("Horizontal");
-        _direction.x = direction;
-        transform.Translate(_direction.normalized * _speed);
-    }
-*/
-
-// case 2 AddForce
-/*
-{
-    [SerializeField] private Vector2 _direction;
-    [SerializeField] private float _acceleration;
-    [SerializeField] private Rigidbody2D _rb;
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-
-    private void FixedUpdate()
-    {
-        
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            _spriteRenderer.flipX = true;
-            _direction.x -= _acceleration;
-            
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            _spriteRenderer.flipX = false;
-            _direction.x += _acceleration;
-            
-        }
-        _rb.AddForce(_direction * _acceleration);
-    }
-*/
-// case 3 Impulse
-/*
-    [SerializeField] private Vector2 _direction;
-    [SerializeField] private float _acceleration;
-    [SerializeField] private Rigidbody2D _rb;
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            _spriteRenderer.flipX = true;
-            _direction.x -= _acceleration;
-
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            _spriteRenderer.flipX = false;
-            _direction.x += _acceleration;
-
-        }
-        _rb.AddForce(_direction * _acceleration, ForceMode2D.Impulse);
-*/
-// case 4 Lerp
-/*
-    [SerializeField] Vector2 startPosition;
-    [SerializeField] Vector2 endPosition;
-    [SerializeField] private float step;
-    [SerializeField] private float progress;
-    [SerializeField] private Rigidbody2D _rigidbody;
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-
-    void Start()
-    {
-        transform.position = startPosition;
-        _rigidbody = GetComponent<Rigidbody2D>();
-    }
-
-    private void FixedUpdate()
-    {
-        float direction = Input.GetAxisRaw("Horizontal");
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-        {
-            startPosition = transform.position;
-            endPosition.x += direction;
-            //endPosition.y = 0;
-            transform.position = Vector2.Lerp(startPosition, endPosition, step);
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            startPosition = transform.position;
-            _spriteRenderer.flipX = true;
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            startPosition = transform.position;
-            _spriteRenderer.flipX = false;
-        }
-    }
-*/
-// case 5 In our project
-/*
-     private Rigidbody2D _rigidbody;
-    [SerializeField] private float _speed;  
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-     private float _direction;
-
-    void Start()
-    {
-        _rigidbody = GetComponent<Rigidbody2D>();  
-    }
-
-    void Update()
-    {
-        _direction = Input.GetAxisRaw("Horizontal");
-
-        if (_direction > 0 && _spriteRenderer.flipX)
-        {
-            _spriteRenderer.flipX = false;
-        }
-        else if (_direction < 0 && !_spriteRenderer.flipX)
-        {
-            _spriteRenderer.flipX = true;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        _rigidbody.velocity = new Vector2(_direction * _speed, _rigidbody.velocity.y);//x=1, y=0
-    }
-*/
+#region lab5
+    // Долго занимался рефакторингом, плохо написал код и многое не успел:)
+    // 
+    // Главная проблема - у нас всё в одном классе PlayerMover.
+    // Было бы лучше разбить всё на отдельные классы "Animation, UI, Attack и тд..."
+    // 
 #endregion
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -161,6 +27,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private LayerMask _whatIsGround;
     [SerializeField] private LayerMask _whatIsCell;
+    [SerializeField] private LayerMask _whatIsPlatform;
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private float _jumpForce;
     #endregion
@@ -173,10 +40,6 @@ public class PlayerMover : MonoBehaviour
 
     [SerializeField] private int _maxHitPoints;
     [SerializeField] private int _maxManaPoints;
-
-    [SerializeField] private Collider2D _AttackRange;
-    [SerializeField] private int _attackDamage;
-
     [SerializeField] private EndLevelPortal _portalForEscape;
 
     
@@ -199,27 +62,42 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private Slider _manaPointsBar;
     [SerializeField] private GameObject _menuPanel;
 
+    [Header("Attack")]
+    [SerializeField] private LayerMask _whatIsEnemy;
+    [SerializeField] private Transform _swordAttackPoint;
+    [SerializeField] private float _swordAttackRadius;
+    [SerializeField] private int _swordDamage;
+
+    [SerializeField] private Transform _skillCastPoint;
+    [SerializeField] private LineRenderer _castLine;
+    [SerializeField] private float _skillLength;
+    [SerializeField] private int _skillDamage;
+    [SerializeField] private int _manaForCast;
+
+    [SerializeField] private bool _faceRight;
+
 
     private float _horizontalDirection;
     private float _verticalDirection;
+
     private bool _jump;
     private bool _crawl;
-    private bool _cast;
+    // private bool _cast;
     private bool _hurt;
     private bool _death;
+
     private int _currentHitPoints;
     private int _currentManaPoints;
     private int _coinsAmount;
     private float _lastPushTime;
 
+    private bool _needToAttack;
+    private bool _needToCast;
+
     private bool _checkActiveMenuPanel = false;
     private bool checkEnoughMoney = false;
 
-    public bool CanAttackEnemy { get; set; }
-
     public bool CanClimb { private get; set; }
-
-    public int AttackDamage { get; set; }
 
     public int CoinsAmount
     {
@@ -255,56 +133,61 @@ public class PlayerMover : MonoBehaviour
     {
         _menuPanel.SetActive(_checkActiveMenuPanel);
 
+        Vector2 vector = new Vector2(10, 11);
+
         _hitPointsBar.maxValue = _maxHitPoints;
         CurrentHitPoints = _maxHitPoints;
 
         _manaPointsBar.maxValue = _maxManaPoints;
         CurrentManaPoints = _maxManaPoints;
 
-        AttackDamage = _attackDamage;
-        _AttackRange.enabled = false;
-        CanAttackEnemy = false;
+        // AttackDamage = _attackDamage;
+        // _AttackRange.enabled = false;
+        // CanAttackEnemy = false;
         _death = false;
 
         CoinsAmount = 0;
         _rigidbody = GetComponent<Rigidbody2D>();
     }
+
     private void Update()
     {
         if (!_death)
         {
-            _verticalDirection = Input.GetAxisRaw("Vertical");
+            if (_animator.GetBool(_hurtAnimatorKey))
+            {
+                return;
+            }
 
+            if (Input.GetButtonDown("Fire1"))
+            {
+                _needToAttack = true;
+            }
+
+            if (Input.GetButtonDown("Fire2") && CurrentManaPoints >= _manaForCast)
+            {
+                _needToCast = true;
+                CurrentManaPoints -= _manaForCast;
+            }
+
+            #region Движение
+            _verticalDirection = Input.GetAxisRaw("Vertical");
             _horizontalDirection = Input.GetAxisRaw("Horizontal");
             _animator.SetFloat(_walkAnimatorKey, Mathf.Abs(_horizontalDirection));
 
-            if (_horizontalDirection > 0 && _spriteRenderer.flipX)
-                _spriteRenderer.flipX = false;
-            else if (_horizontalDirection < 0 && !_spriteRenderer.flipX)
-                _spriteRenderer.flipX = true;
+            if (_horizontalDirection > 0 && !_faceRight)
+                Flip();
+            else if (_horizontalDirection < 0 && _faceRight)
+                Flip();
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _jump = true;
-                ResetAttack();
             }
 
-            if (Input.GetKey(KeyCode.C))
-            {
-                _crawl = true;
-                ResetAttack();
-            }
-            else
-                _crawl = false;
+            _crawl = Input.GetKey(KeyCode.C);
 
-            if (Input.GetKey(KeyCode.Mouse0) && !CanAttackEnemy)
-            {
-                CanAttackEnemy = true;
-                _AttackRange.enabled = true;
-                _animator.SetTrigger(_attackAnimatorKey);
-            }
-            _cast = Input.GetKey(KeyCode.Mouse1);
-
+            #endregion
             if (!checkEnoughMoney)
                 checkEnoughMoney = _portalForEscape.CompareCoins(CoinsAmount);
 
@@ -314,7 +197,12 @@ public class PlayerMover : MonoBehaviour
                 _checkActiveMenuPanel = !_checkActiveMenuPanel;
             }
         }
+    }
 
+    private void Flip()
+    {
+        _faceRight = !_faceRight;
+        transform.Rotate(0, 180, 0);
     }
 
     private void FixedUpdate()
@@ -323,18 +211,17 @@ public class PlayerMover : MonoBehaviour
 
         if (_animator.GetBool(_hurtAnimatorKey))
         {
-            if (Time.time - _lastPushTime > 0.2f && canJump)
+            if (canJump && Time.time - _lastPushTime > 0.2f)
             {
                 _hurt = false;
                 _animator.SetBool(_hurtAnimatorKey, _hurt);
             }
+
+            _needToAttack = false;
+            _needToCast = false;
             return;
         }
 
-        // передвижение
-        _rigidbody.velocity = new Vector2(_horizontalDirection * _speed, _rigidbody.velocity.y);
-
-        // Возможность подниматься по лестнице
         if (CanClimb)
         {
             _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _verticalDirection * _speed);
@@ -346,25 +233,37 @@ public class PlayerMover : MonoBehaviour
         }
 
         bool canStand = !Physics2D.OverlapCircle(_headChecker.position, _headCheckerRadius, _whatIsCell);
+        Collider2D coll = Physics2D.OverlapCircle(_headChecker.position, _headCheckerRadius, _whatIsCell);
         _headCollider.enabled = !_crawl && canStand;
 
-        // Условие прыжка
         if (_jump && canJump)
         {
             _rigidbody.AddForce(Vector2.up * _jumpForce);
             _jump = false;
-            ResetAttack();
         }
-
-        // Атака 
-        
 
         _animator.SetBool(_jumpAnimatorKey, !canJump);
         _animator.SetBool(_crouchAnimatorKey, !_headCollider.enabled);
-        _animator.SetBool(_castAnimatorKey, _cast);
 
-        if(_cast)
-            _cast = false;
+        if (!_headCollider.enabled)
+        {
+            _needToAttack = false;
+            _needToCast = false;
+        }
+
+        if (_needToAttack)
+        {
+            StartAttack();
+            _horizontalDirection = 0;
+        }
+
+        if (_needToCast)
+        {
+            StartCast();
+            _horizontalDirection = 0;
+        }
+
+        _rigidbody.velocity = new Vector2(_horizontalDirection * _speed, _rigidbody.velocity.y);
     }
 
     // Gizmos
@@ -373,18 +272,117 @@ public class PlayerMover : MonoBehaviour
         Gizmos.DrawWireSphere(_groundChecker.position, _groundCheckerRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(_headChecker.position, _headCheckerRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_swordAttackPoint.position, new Vector3(_swordAttackRadius, _swordAttackRadius, 0));
+    }
+
+    private void StartAttack()
+    {
+        if (_animator.GetBool(_attackAnimatorKey))
+        {
+            return;
+        }
+
+        _animator.SetBool(_attackAnimatorKey, true);
+    }
+
+    private void Attack()
+    {
+        Collider2D[] targets = Physics2D.OverlapBoxAll(_swordAttackPoint.position,
+            new Vector2(_swordAttackRadius, _swordAttackRadius), _whatIsEnemy);
+
+        foreach (var target in targets)
+        {
+            DragonEnemy dragonEnemy = target.GetComponent<DragonEnemy>();
+            if (dragonEnemy != null)
+            {
+                dragonEnemy.TakeDamage(_swordDamage);
+            }
+
+            Opossum opossum = target.GetComponent<Opossum>();
+            if (opossum != null)
+            {
+                opossum.TakeDamage(_swordDamage);
+            }
+
+            MaskMan maskMan = target.GetComponent<MaskMan>();
+            if(maskMan != null)
+            {
+                maskMan.TakeDamage(_swordDamage);
+            }
+
+            ArrowLauncher arrowLauncher = target.GetComponent<ArrowLauncher>();
+            if (arrowLauncher != null)
+            {
+                arrowLauncher.TakeDamage(_swordDamage);
+            }
+        }
+        _animator.SetBool(_attackAnimatorKey, false);
+        _needToAttack = false;
+    }
+
+    private void StartCast()
+    {
+        if (_animator.GetBool(_castAnimatorKey))
+        {
+            return;
+        }
+
+        _animator.SetBool(_castAnimatorKey, true);
+    }
+
+    private void Cast()
+    {
+        RaycastHit2D[] hits =
+            Physics2D.RaycastAll(_skillCastPoint.position, transform.right, _skillLength, _whatIsEnemy);
+        foreach (var hit in hits)
+        {
+            DragonEnemy dragon = hit.collider.GetComponent<DragonEnemy>();
+            if (dragon != null)
+            {
+                dragon.TakeDamage(_skillDamage);
+            }
+
+            Opossum opossum = hit.collider.GetComponent<Opossum>();
+            if (opossum != null)
+            {
+                opossum.TakeDamage(_skillDamage);
+            }
+
+            MaskMan maskMan = hit.collider.GetComponent<MaskMan>();
+            if (maskMan != null)
+            {
+                maskMan.TakeDamage(_skillDamage);
+            }
+
+            ArrowLauncher arrowLauncher = hit.collider.GetComponent<ArrowLauncher>();
+            if(arrowLauncher != null)
+            {
+                arrowLauncher.TakeDamage(_skillDamage);
+            }
+        }
+        _animator.SetBool(_castAnimatorKey, false);
+        _castLine.SetPosition(0, _skillCastPoint.position);
+        _castLine.SetPosition(1, _skillCastPoint.position + transform.right * _skillLength);
+        _castLine.enabled = true;
+        _needToCast = false;
+        Invoke(nameof(DisableLine), 0.08f);
+    }
+
+    private void DisableLine()
+    {
+        _castLine.enabled = false;
     }
 
     // Взаимодействие с зельем здоровья
     public void AddHitPoints(int hitPoints)
     {
-        Debug.Log($"Hit points started to grow");
-        int missingHP = _maxHitPoints - CurrentHitPoints;
-        int pointToAdd = missingHP > hitPoints ? hitPoints : missingHP;
-        StartCoroutine(RestoreHP(pointToAdd));
+        int missingHitPoints = _maxHitPoints - CurrentHitPoints;
+        int pointToAdd = missingHitPoints > hitPoints ? hitPoints : missingHitPoints;
+        StartCoroutine(RestoreHitPoints(pointToAdd));
     }
 
-    private IEnumerator RestoreHP(int pointsToAdd)
+    private IEnumerator RestoreHitPoints(int pointsToAdd)
     {
         while(pointsToAdd !=0)
         {
@@ -394,7 +392,7 @@ public class PlayerMover : MonoBehaviour
         }
     }
 
-    private IEnumerator RestoreMP(int pointsToAdd)
+    private IEnumerator RestoreManaPoints(int pointsToAdd)
     {
         while (pointsToAdd != 0)
         {
@@ -406,10 +404,9 @@ public class PlayerMover : MonoBehaviour
 
     public void AddManaPoints(int manaPoints)
     {
-        Debug.Log($"Mana started to grow");
-        int missingMP = _maxManaPoints - CurrentManaPoints;
-        int pointToAdd = missingMP > manaPoints ? manaPoints : missingMP;
-        StartCoroutine(RestoreMP(manaPoints));
+        int missingManaPoints = _maxManaPoints - CurrentManaPoints;
+        int pointsToAdd = missingManaPoints > manaPoints ? manaPoints : missingManaPoints;
+        StartCoroutine(RestoreManaPoints(pointsToAdd));
     }
 
     public void TakeDamage(int damage, float pushPower = 0, float enemyPosX = 0)
@@ -427,20 +424,13 @@ public class PlayerMover : MonoBehaviour
             Invoke(nameof(ReloadScene), 0.9f);
         }
 
-        if(pushPower != 0)
+        if (pushPower != 0)
         {
             _lastPushTime = Time.time;
             int direction = transform.position.x > enemyPosX ? 1 : 1;
             _rigidbody.AddForce(new Vector2(direction * pushPower / 2, pushPower));
             _animator.SetBool(_hurtAnimatorKey, _hurt);
         }
-        ResetAttack();
-    }
-
-    private void ResetAttack()
-    {
-        _AttackRange.enabled = false;
-        CanAttackEnemy = false;
     }
 
     private void ReloadScene()

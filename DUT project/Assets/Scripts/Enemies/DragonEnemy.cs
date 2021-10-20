@@ -9,58 +9,53 @@ public class DragonEnemy : MonoBehaviour
     [SerializeField] private Transform _shootPoint;
 
     [SerializeField] private LayerMask _whatIsPlayer;
-    [SerializeField] private GameObject _dragon;
+    [SerializeField] private GameObject _enemySystem;
     [SerializeField] private Animator _animator;
     [SerializeField] private float _attackRange;
     [SerializeField] private DragonFireBall _fireShoot;
     [SerializeField] private bool _faceRight;
     [SerializeField] private int _maxHitPoints;
+    [SerializeField] private Slider _hitPointsBar;
 
     [Header("Sounds")]
     //[SerializeField] private AudioSource _shootSound;
     //[SerializeField] private AudioSource _hitSound;
 
-    [SerializeField] private Slider _hpBar;
 
-    private int _currentHitPoints;
     private bool _canShoot;
     private bool _death;
 
+    private int _currentHitPoints;
+
     private void Start()
     {
-        _hpBar.maxValue = _maxHitPoints;
-        ChangeHp(_maxHitPoints);
+        _hitPointsBar.maxValue = _maxHitPoints;
+        ChangeHitPoints(_maxHitPoints);
     }
 
-    private int CurrentHitPoints
-    {
-        get => _currentHitPoints;
-        set
-        {
-            _currentHitPoints = value;
-            _hpBar.value = _currentHitPoints;
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        PlayerMover player = other.collider.GetComponent<PlayerMover>();
-        if (player != null)
-        {
-            if (player.CanAttackEnemy)
-                TakeDamage(player.AttackDamage);
-        }
-    }
+    // private void OnCollisionEnter2D(Collision2D other)
+    // {
+    //    PlayerMover player = other.collider.GetComponent<PlayerMover>();
+    //    if (player != null)
+    //    {
+    //        if (player.CanAttackEnemy)
+    //            TakeDamage(player.AttackDamage);
+    //    }
+    // }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(_attackRange * 2, 1, 0));
     }
 
-    private void ChangeHp(int hitPoints)
+    private void ChangeHitPoints(int hitPoints)
     {
         _currentHitPoints = hitPoints;
-        _hpBar.value = hitPoints;
+        if (_currentHitPoints <= 0)
+        {
+            Destroy(_enemySystem);
+        }
+        _hitPointsBar.value = hitPoints;
     }
 
     private void FixedUpdate()
@@ -99,10 +94,8 @@ public class DragonEnemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        CurrentHitPoints -= damage;
-        //_hitSound.Play();
-        if (CurrentHitPoints <= 0)
-            Destroy(_dragon);
+        // _hitSound.Play();
+        ChangeHitPoints(_currentHitPoints - damage);
     }
 
     #region Funcions for animations
