@@ -564,6 +564,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndLevelDoor
       objectReference: {fileID: 0}
+    - target: {fileID: 2811561242136384112, guid: 7f6c0e6967a4fb047a1aa3e007441c1b,
+        type: 3}
+      propertyPath: _levelToLoad
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2815896644941358833, guid: 7f6c0e6967a4fb047a1aa3e007441c1b,
         type: 3}
       propertyPath: m_RootOrder
@@ -22442,7 +22447,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1783383072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.78936, y: -0.36000013, z: -10}
+  m_LocalPosition: {x: -16.947144, y: -0.36000013, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -22623,7 +22628,7 @@ PrefabInstance:
     - target: {fileID: 4373785988418844783, guid: abd73d281ce3176478d4d85e60d6de1c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.6606407
+      value: 2.5028572
       objectReference: {fileID: 0}
     - target: {fileID: 4373785988418844783, guid: abd73d281ce3176478d4d85e60d6de1c,
         type: 3}

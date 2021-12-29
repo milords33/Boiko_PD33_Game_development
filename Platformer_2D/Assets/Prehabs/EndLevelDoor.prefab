@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2810998279803440523}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 78.310005, y: -3.2882996, z: 0}
-  m_LocalScale: {x: 1.564769, y: 1.79, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
   - {fileID: 4043264288495880631}
   m_Father: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbdc452e35d812146be4253edee8e6d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinsToNextLevel: 0
+  _scoreToNextLevel: 0
   _levelToLoad: 1
   _spriteRenderer: {fileID: 2735719956663902207}
   _doorOpenSprite: {fileID: 21300004, guid: ae3918a914038694d852d0bb81f62473, type: 3}

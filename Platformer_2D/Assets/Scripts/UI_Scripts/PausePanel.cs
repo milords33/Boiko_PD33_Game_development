@@ -9,6 +9,7 @@ public class PausePanel : MonoBehaviour
     [SerializeField] private AudioMixerGroup _mixer;
     [SerializeField] private Toggle _backgroundMusicToggle;
     [SerializeField] private Slider _musicSlider;
+    [SerializeField] private Slider _effectsSlider;
 
     private void Update()
     {
@@ -22,6 +23,12 @@ public class PausePanel : MonoBehaviour
             if (_musicSlider.value == 0)
                 _mixer.audioMixer.SetFloat("MusicVolume", -80);
         }
+
+        _mixer.audioMixer.SetFloat("EffectsVolume", Mathf.Lerp(-35, 0, _effectsSlider.value));
+
+        if (_effectsSlider.value == 0)
+            _mixer.audioMixer.SetFloat("EffectsVolume", -80);
+
     }
 
     private void OnEnable()
