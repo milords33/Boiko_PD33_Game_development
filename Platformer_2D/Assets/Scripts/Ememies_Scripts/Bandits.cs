@@ -1,16 +1,18 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bandits : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private GameObject _bandit;
+    [SerializeField] private CapsuleCollider2D _collider;
     [SerializeField] private float _walkRange;
     [SerializeField] private float _speed;
     [SerializeField] private float _pushPower;
     [SerializeField] private int _damage;
-    [SerializeField] private int _maxHp;
+    [SerializeField] private int _maxHitPoints;
     [SerializeField] private bool _faceRight;
 
     [Header("Animation")]
@@ -22,21 +24,25 @@ public class Bandits : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource _hitSound;
 
+    [Header("UI")]
+    [SerializeField] private Slider _hitPointsBar;
+
     private Vector2 _startPostion;
     private bool _hurt = false;
     private int _currentHitPoints;
-    private int CurrentHitPoints
+/*    private int CurrentHitPoints
     {
         get => _currentHitPoints;
         set
         {
             _currentHitPoints = value;
         }
-    }
+    }*/
 
     private void Start()
     {
-        _currentHitPoints = _maxHp;
+        _hitPointsBar.maxValue = _maxHitPoints;
+        ChangeHitPoints(_maxHitPoints);
         _startPostion = transform.position;
     }
 
@@ -71,6 +77,7 @@ public class Bandits : MonoBehaviour
     {
         _faceRight = !_faceRight;
         transform.Rotate(0, 180, 0);
+        _hitPointsBar.transform.Rotate(0, 180, 0);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -104,14 +111,15 @@ public class Bandits : MonoBehaviour
    public void TakeDamage(int damage, float pushPower = 0, float heroPosX = 0)
     {
         _hurt = true;
-        CurrentHitPoints -= damage;
         _hitSound.Play();
         _animator.SetTrigger(_hurtAnimatorKey);
 
-
-        if (CurrentHitPoints <= 0)
+        ChangeHitPoints(_currentHitPoints - damage);
+        if (_currentHitPoints <= 0)
         {
             _animator.SetTrigger(_deathAnimatorKey);
+            _rigidbody.simulated = false;
+            _collider.enabled = false;
         }
         else
         {
@@ -123,12 +131,18 @@ public class Bandits : MonoBehaviour
         }
     }
 
-    private void AnimationDeath()
+    private void ChangeHitPoints(int hitPoints)
+    {
+        _currentHitPoints = hitPoints;
+        _hitPointsBar.value = hitPoints;
+    }
+
+    private void AnimationEventDeath()
     {
         Destroy(_bandit);
     }
 
-    private void AnimationHurt()
+    private void AnimationEventHurt()
     {
         _hurt = false;
     }

@@ -18,6 +18,7 @@ public class PlayerMover : MonoBehaviour
 
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private LayerMask _whatIsGround;
+    [SerializeField] private LayerMask _whatIsCell;
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private float _jumpForce;
 
@@ -221,7 +222,10 @@ public class PlayerMover : MonoBehaviour
             _rigidbody.velocity = new 
                 Vector2(_horizontalDirection * _speed, _rigidbody.velocity.y);
 
-        _topBodyCollider.enabled = !_roll;
+        //use
+         bool canStand = !Physics2D.OverlapCircle(_topBodyChecker.position, _topBodyCheckerRadius, _whatIsCell);
+         Collider2D coll = Physics2D.OverlapCircle(_topBodyChecker.position, _topBodyCheckerRadius, _whatIsCell);
+        _topBodyCollider.enabled = !_roll && canStand;
 
         if (_jump && canJump && !_roll)
         {
@@ -307,7 +311,7 @@ public class PlayerMover : MonoBehaviour
         {
             _lastPushTime = Time.time;
             int direction = transform.position.x > enemyPosX ? 1 : 1;
-            _rigidbody.AddForce(new Vector2(direction * pushPower / 2, pushPower));
+            _rigidbody.AddForce(new Vector2(direction * pushPower/2, pushPower));
             _animator.SetBool(_hurtAnimatorKey, _hurt);
         }
         ResetAttack();

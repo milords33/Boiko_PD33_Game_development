@@ -1,63 +1,74 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyArcher : MonoBehaviour
 {
-    [SerializeField] private string _shootAnimatonKey;
-    [SerializeField] private Transform _shootPoint;
-
-    [SerializeField] private LayerMask _whatIsPlayer;
     [SerializeField] private GameObject _archer;
-    [SerializeField] private Animator _animator;
-    [SerializeField] private float _attackRange;
+    [SerializeField] private Rigidbody2D _rigidbody;
+    [SerializeField] private CapsuleCollider2D _collider;
+    [SerializeField] private Transform _shootPoint;
+    [SerializeField] private LayerMask _whatIsPlayer;
     [SerializeField] private Arrow _arrowShoot;
+    [SerializeField] private float _attackRange;
+    [SerializeField] private int _maxHitPoints;
     [SerializeField] private bool _faceRight;
-    [SerializeField] private int _maxHp;
 
-    [Header("Sounds")]
+    [Header("Animation")]
+    [SerializeField] private Animator _animator;
+    [SerializeField] private string _shootAnimatonKey;
+    [SerializeField] private string _hurtAnimatorKey;
+    [SerializeField] private string _deathAnimatorKey;
+
+    [Header("Audio")]
     [SerializeField] private AudioSource _shootSound;
     [SerializeField] private AudioSource _hitSound;
 
-    //[SerializeField] private Slider _hpBar;
+    [Header("UI")]
+    [SerializeField] private Slider _hitPointsBar;
 
-    private int _currentHP;
+    private bool _hurt = false;
     private bool _canShoot;
     private bool _death;
 
-    private void Start()
+    private int _currentHitPoints;
+    private int CurrentHitPoints
     {
-        //_hpBar.maxValue = _maxHp;
-        ChangeHp(_maxHp);
-    }
-
-    private int CurrentHP
-    {
-        get => _currentHP;
+        get => _currentHitPoints;
         set
         {
-            _currentHP = value;
-           // _hpBar.value = _currentHP;
+            _currentHitPoints = value;
+             _hitPointsBar.value = _currentHitPoints;
         }
     }
+    private void Start()
+    {
+        _hitPointsBar.maxValue = _maxHitPoints;
+        ChangeHitPoints(_maxHitPoints);
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
-        PlayerMover player = other.collider.GetComponent<PlayerMover>();
-        if (player != null)
+        if (_currentHitPoints > 0)
         {
-            if (player.CanAttackEnemy)
-                TakeDamage(player.AttackDamage);
+            PlayerMover player = other.collider.GetComponent<PlayerMover>();
+            if (player != null)
+            {
+                if (player.CanAttackEnemy)
+                    TakeDamage(player.AttackDamage);
+            }
         }
     }
-        private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(_attackRange * 2, 1, 0));
     }
 
-    private void ChangeHp(int hp)
+    private void ChangeHitPoints(int hitPoints)
     {
-        _currentHP = hp;
-       // _hpBar.value = hp;
+        _currentHitPoints = hitPoints;
+        _hitPointsBar.value = hitPoints;
     }
 
     private void FixedUpdate()
@@ -72,7 +83,7 @@ public class EnemyArcher : MonoBehaviour
     private void CheckIfCanShoot()
     {
         Collider2D player = Physics2D.OverlapBox(transform.position, new Vector2(_attackRange, 1), 0, _whatIsPlayer);
-        if (player != null)
+        if (player != null && !_hurt)
         {
             StartShoot(player.transform.position);
             _canShoot = true;
@@ -89,6 +100,7 @@ public class EnemyArcher : MonoBehaviour
         if (posX < position.x && !_faceRight || posX > position.x && _faceRight)
         {
             transform.Rotate(0, 180, 0);
+            _hitPointsBar.transform.Rotate(0, 180, 0);
             _faceRight = !_faceRight;
         }
         _animator.SetBool(_shootAnimatonKey, true);
@@ -96,10 +108,17 @@ public class EnemyArcher : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        CurrentHP -= damage;
+        _hurt = true;
+        CurrentHitPoints -= damage;
         _hitSound.Play();
-        if (CurrentHP <= 0)
-            Destroy(_archer);
+        _animator.SetTrigger(_hurtAnimatorKey);
+
+        if (CurrentHitPoints <= 0)
+        {
+            _animator.SetTrigger(_deathAnimatorKey);
+            _rigidbody.simulated = false;
+            _collider.enabled = false;
+        }
     }
 
     #region Funcions for animations
@@ -109,7 +128,8 @@ public class EnemyArcher : MonoBehaviour
         _shootSound.Play();
     }
 
-    private void Shoot()
+
+    private void AnimationEventShoot()
     {
         Arrow arrow = Instantiate(_arrowShoot, _shootPoint.position, Quaternion.identity);
         if (_faceRight)
@@ -121,6 +141,17 @@ public class EnemyArcher : MonoBehaviour
         _animator.SetBool(_shootAnimatonKey, false);
         Invoke(nameof(CheckIfCanShoot), 1f);
     }
+
+    private void AnimationEventHurt()
+    {
+        _hurt = false;
+    }
+
+    private void AnimationEventDeath()
+    {
+        Destroy(_archer);
+    }
+
     #endregion
 
 }
