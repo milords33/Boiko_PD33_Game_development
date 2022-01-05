@@ -18,6 +18,7 @@ public class EndLevelDoor : MonoBehaviour
         {
             _spriteRenderer.sprite = _doorOpenSprite;
             _openDoorSound.Play();
+            PlayerPrefs.SetInt("loadingLevel", _levelToLoad);
             Invoke(nameof(LoadNextScene), 1f);
         }
     }

@@ -8,6 +8,7 @@ public class ButtonStartLevel : MonoBehaviour
 {
     [SerializeField] private Button _button;
     [SerializeField] private int _levelToLoad;
+    private const string NEWGAME = "ButtonNewGame";
 
     private void Awake()
     {
@@ -16,6 +17,8 @@ public class ButtonStartLevel : MonoBehaviour
 
     private void OnButtonClickHandler()
     {
+       if (_button.name == NEWGAME)
+            PlayerPrefs.DeleteKey("loadingLevel");
         SceneManager.LoadScene(_levelToLoad);
     }
 }
