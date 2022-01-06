@@ -14,24 +14,40 @@ public class PlayerMover : MonoBehaviour
     [Header("Player preferences")]
     [SerializeField] private float _speed;
     [SerializeField] private float _rollForce;
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-    [SerializeField] private Transform _groundChecker;
     [SerializeField] private LayerMask _whatIsGround;
     [SerializeField] private LayerMask _whatIsCell;
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private float _jumpForce;
-    [SerializeField] private Collider2D _topBodyCollider;
-    [SerializeField] private Transform _topBodyChecker;
     [SerializeField] private float _topBodyCheckerRadius;
     [SerializeField] private int _maxHitPoints;
+    [SerializeField] private int _maxManaPoints;
     [SerializeField] private int _maxShieldPoints;
-    [SerializeField] private Collider2D _AttackRange;
-    [SerializeField] private int _attackDamage;
-    [SerializeField] private float _attackPushPower;
+
+    [Header("PlayerElements")]
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private Collider2D _topBodyCollider;
+    [SerializeField] private Transform _topBodyChecker;
+    [SerializeField] private Transform _groundChecker;
+    [SerializeField] private Transform _shootPoint;
+    [SerializeField] private MagicWave  _magicWave;
+
+    [Header("Attack")]
+    [SerializeField] private LayerMask _whatIsEnemy;
+    [SerializeField] private Transform _swordAttackPoint;
+    [SerializeField] private float _swordAttackPushPower;
+    [SerializeField] private float _swordAttackRadius;
+    [SerializeField] private int _swordDamage;
+    [SerializeField] private int _manaForCast;
+
+    [SerializeField] private bool _faceRight;
+
+    private bool _needToAttack;
+
 
     [Header("Effects")]
     [SerializeField] private GameObject _groundEffect;
     [SerializeField] private GameObject _hitEffect;
+    //[SerializeField] private GameObject _magicEffect;
 
     [Header("Animation")]
     [SerializeField] private Animator _animator;
@@ -40,15 +56,18 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private string _jumpTriggerAnimatorKey;
     [SerializeField] private string _rollBoolAnimatorKey;
     [SerializeField] private string _rollTriggerAnimatorKey;
-    [SerializeField] private string _BlockAnimatorKey;
-    [SerializeField] private string _BlockIdleAnimatorKey;
+    [SerializeField] private string _blockAnimatorKey;
+    [SerializeField] private string _blockIdleAnimatorKey;
+    [SerializeField] private string _magicWaveAnimatorKey;
     [SerializeField] private string _hurtAnimatorKey;
     [SerializeField] private string _deathAnimatorKey;
+    [SerializeField] private string _attackAnimatorKey;
 
     [Header("UI")]
     [SerializeField] private TMP_Text _coinsAmountText;
     [SerializeField] private Slider _hitPointsBar;
     [SerializeField] private Slider _shieldPointsBar;
+    [SerializeField] private Slider _manaPointsBar;
     [SerializeField] private GameObject _pausePanelGameObject;
     [SerializeField] private PausePanel _pausePanelClass;
 
@@ -72,21 +91,19 @@ public class PlayerMover : MonoBehaviour
     private float _timeSinceAttack = 0.0f;
     private float _lastPushTime;
 
+    private const int _shieldProtectPoints = 25;
     private int _currentShieldPoints;
-    private int _shieldProtectPoints = 25;
     private int _currentHitPoints;
+    private int _currentManaPoints;
+
     private bool _shieldActive;
     private bool _hurt;
     private bool _death;
 
     private int _coinsAmount;
-    private bool _checkActiveMenuPanel = false;
+    private bool _checkActiveMenuPanel = false; 
 
-    public bool CanAttackEnemy { get; set; }
-
-    public int AttackDamage { get; set; }
-
-    public float AttackPushPower { get; set; }
+    public float SwordAttackPushPower { get; set; }
 
     public int CoinsAmount
     {
@@ -118,22 +135,30 @@ public class PlayerMover : MonoBehaviour
         }
     }
 
+    public int CurrentManaPoints
+    {
+        get => _currentManaPoints;
+        set
+        {
+            _currentManaPoints = value;
+            _manaPointsBar.value = _currentManaPoints;
+        }
+    }
+
 
     private void Start()
-    {
+    {   
         _pausePanelClass.GetAudioVolume();
-        _pausePanelGameObject.SetActive(_checkActiveMenuPanel);
+
         _hitPointsBar.maxValue = _maxHitPoints;
 
-        AttackDamage = _attackDamage;
-        AttackPushPower = _attackPushPower;
-        _AttackRange.enabled = false;
-        CanAttackEnemy = false;
+        SwordAttackPushPower = _swordAttackPushPower;
         _death = false;
-        _rigidbody = GetComponent<Rigidbody2D>();
+
         _shieldPointsBar.maxValue = _maxShieldPoints;
         CurrentShieldPoints = _maxShieldPoints;
 
+        _rigidbody = GetComponent<Rigidbody2D>();
         if (PlayerPrefs.HasKey("HitPoints"))
             CurrentHitPoints = PlayerPrefs.GetInt("HitPoints");
         else
@@ -143,6 +168,11 @@ public class PlayerMover : MonoBehaviour
             CoinsAmount = PlayerPrefs.GetInt("CoinsAmount");
         else
             CoinsAmount = 0;
+
+        if (PlayerPrefs.HasKey("ManaPoints"))
+            CurrentManaPoints = PlayerPrefs.GetInt("ManaPoints");
+        else
+            CurrentManaPoints = _maxManaPoints;
     }
 
     private void Update()
@@ -156,16 +186,15 @@ public class PlayerMover : MonoBehaviour
             _horizontalDirection = Input.GetAxisRaw("Horizontal");
             _animator.SetFloat(_runAnimatorKey, Mathf.Abs(_horizontalDirection));
 
-            if (_horizontalDirection > 0 && _spriteRenderer.flipX)
-                _spriteRenderer.flipX = false;
-            else if (_horizontalDirection < 0 && !_spriteRenderer.flipX)
-                _spriteRenderer.flipX = true;
+            if (_horizontalDirection > 0 && !_faceRight)
+                Flip();
+            else if (_horizontalDirection < 0 && _faceRight )
+                Flip();
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _jump = true;
                 _jumpSound.Play();
-                ResetAttack();
             }
 
             if (Input.GetKeyDown(KeyCode.C) && !_roll)
@@ -173,11 +202,10 @@ public class PlayerMover : MonoBehaviour
                 _roll = true;
                 _rollSound.Play();
                 _animator.SetTrigger(_rollTriggerAnimatorKey);
-                if (_spriteRenderer.flipX)
+                if (!_faceRight)
                     _rigidbody.velocity = new Vector2(-1 * _rollForce, _rigidbody.velocity.y);
                 else
                     _rigidbody.velocity = new Vector2(1 * _rollForce, _rigidbody.velocity.y);
-                ResetAttack();
             }
             #endregion
 
@@ -186,8 +214,7 @@ public class PlayerMover : MonoBehaviour
             if (Input.GetKey(KeyCode.Mouse0) && _timeSinceAttack > 0.25f && !_roll)
             {
                 _swingSound.Play();
-                _AttackRange.enabled = true;
-                CanAttackEnemy = true;
+                _needToAttack = true;
                 _currentAttack++;
 
                 if (_currentAttack > 3)
@@ -200,18 +227,23 @@ public class PlayerMover : MonoBehaviour
             }
             #endregion
 
+            if (Input.GetKeyDown(KeyCode.F) && CurrentManaPoints >= _manaForCast)
+            {
+                CurrentManaPoints -= _manaForCast;
+                _animator.SetBool(_magicWaveAnimatorKey, true);
+            }
+
             #region Shield
             if (Input.GetKeyDown(KeyCode.Mouse1) && !_roll)
             {
-                _animator.SetTrigger(_BlockAnimatorKey);
-                _animator.SetBool(_BlockIdleAnimatorKey, true);
+                _animator.SetTrigger(_blockAnimatorKey);
+                _animator.SetBool(_blockIdleAnimatorKey, true);
                 _shieldActive = true;
                 _shieldActivated.Play();
-                ResetAttack();
             }
             else if (Input.GetKeyUp(KeyCode.Mouse1))
             {
-                _animator.SetBool(_BlockIdleAnimatorKey, false);
+                _animator.SetBool(_blockIdleAnimatorKey, false);
                 _shieldActive = false;
             }
             #endregion
@@ -222,7 +254,6 @@ public class PlayerMover : MonoBehaviour
                 _checkActiveMenuPanel = !_checkActiveMenuPanel;
             }
         }
-
     }
 
     private void FixedUpdate()
@@ -253,11 +284,30 @@ public class PlayerMover : MonoBehaviour
                 _hurt = false;
                 _animator.SetBool(_hurtAnimatorKey, _hurt);
             }
+            _needToAttack = false;
             return;
+        }
+
+
+        if (!_topBodyCollider.enabled)
+        {
+            _needToAttack = false;
+        }
+
+        if (_needToAttack)
+        {
+            StartAttack();
+            _horizontalDirection = 0;
         }
 
         _animator.SetBool(_jumpBoolAnimatorKey, !canJump);
         _animator.SetBool(_rollBoolAnimatorKey, _roll);
+    }
+
+    private void Flip()
+    {
+        _faceRight = !_faceRight;
+        transform.Rotate(0, 180, 0);
     }
 
     private void OnDrawGizmos()
@@ -265,6 +315,8 @@ public class PlayerMover : MonoBehaviour
         Gizmos.DrawWireSphere(_groundChecker.position, _groundCheckerRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(_topBodyChecker.position, _topBodyCheckerRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_swordAttackPoint.position, new Vector3(_swordAttackRadius, _swordAttackRadius, 0));
     }
 
     private IEnumerator RestoreHitPoints(int pointsToAdd)
@@ -282,6 +334,10 @@ public class PlayerMover : MonoBehaviour
         CurrentShieldPoints += _shieldProtectPoints;
     }
 
+    private void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     public void AddHitPoints(int hitPoints)
     {
         _potionSound.Play();
@@ -289,6 +345,7 @@ public class PlayerMover : MonoBehaviour
         int pointToAdd = missingHP > hitPoints ? hitPoints : missingHP;
         StartCoroutine(RestoreHitPoints(pointToAdd));
     }
+
 
     // for moving enemies
     public void TakeDamage(int damage, float pushPower = 0, float enemyPosX = 0)
@@ -327,7 +384,6 @@ public class PlayerMover : MonoBehaviour
             _rigidbody.AddForce(new Vector2(direction * pushPower/2, pushPower));
             _animator.SetBool(_hurtAnimatorKey, _hurt);
         }
-        ResetAttack();
     }
     // for spikes
     public void TakeDamage(int damage)
@@ -336,7 +392,6 @@ public class PlayerMover : MonoBehaviour
         CurrentHitPoints -= damage;
         _hurtSound.Play();
         _hurt = true;
-        ResetAttack();
 
         if (CurrentHitPoints <= 0)
         {
@@ -348,27 +403,60 @@ public class PlayerMover : MonoBehaviour
         }
     }
 
-    private void ReloadScene()
+    private void StartAttack()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (_animator.GetBool(_attackAnimatorKey))
+        {
+            return;
+        }
+
+        _animator.SetBool(_attackAnimatorKey, true);
     }
 
-    #region Funcions for animations
-    private void ResetAttack()
+    private void Attack()
     {
-        _AttackRange.enabled = false;
-        CanAttackEnemy = false;
+        Collider2D[] targets = Physics2D.OverlapBoxAll(_swordAttackPoint.position,
+            new Vector2(_swordAttackRadius, _swordAttackRadius), _whatIsEnemy);
+
+        foreach (var target in targets)
+        {
+            EnemyArcher archer = target.GetComponent<EnemyArcher>();
+            if (archer != null)
+            {
+                archer.TakeDamage(_swordDamage);
+            }
+
+            Bandits bandit = target.GetComponent<Bandits>();
+            if (bandit != null)
+            {
+                bandit.TakeDamage(_swordDamage, _swordAttackPushPower, transform.position.x);
+            }
+        }
+        _animator.SetBool(_attackAnimatorKey, false);
+        _needToAttack = false;
     }
-    private void AnimationEvent_ResetRoll()
+
+
+    #region Funcions for animations
+    private void AnimationEventResetRoll()
     {
         _roll = false;
     }
 
-    private void AnimationEvent_RunSound()
+    private void AnimationEventRunSound()
     {
         Instantiate(_groundEffect, transform.position + new Vector3(0,0.15f,0), Quaternion.identity);
         _runSound.pitch = Random.Range(0.8f, 1.1f);
         _runSound.Play();
+    }
+
+    private void AnimationEventMagicWave()
+    {
+        MagicWave magicWave = Instantiate(_magicWave, _shootPoint.position, Quaternion.identity);
+
+        magicWave.StartFly();
+        _animator.SetBool(_magicWaveAnimatorKey, false);
+        CurrentManaPoints -= _manaForCast;
     }
     #endregion
 }

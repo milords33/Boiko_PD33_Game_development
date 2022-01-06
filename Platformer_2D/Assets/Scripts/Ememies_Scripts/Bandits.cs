@@ -8,6 +8,7 @@ public class Bandits : MonoBehaviour
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private GameObject _bandit;
     [SerializeField] private GameObject _hitEffect;
+    [SerializeField] private PlayerMover _player;
     [SerializeField] private CapsuleCollider2D _collider;
     [SerializeField] private float _walkRange;
     [SerializeField] private float _speed;
@@ -32,8 +33,6 @@ public class Bandits : MonoBehaviour
     private Vector2 _startPostion;
     private bool _hurt = false;
     private int _currentHitPoints;
-
-    private PlayerMover _player;
 
     private void Start()
     {
@@ -81,16 +80,10 @@ public class Bandits : MonoBehaviour
         if (_currentHitPoints > 0)
         {
             PlayerMover player = other.collider.GetComponent<PlayerMover>();
-            _player = player;
             if (player != null)
             {
-                if (player.CanAttackEnemy)
-                    TakeDamage(player.AttackDamage, player.AttackPushPower, player.transform.position.x);
-                else
-                {
                     _animator.SetTrigger(_attackAnimatorKey);
                     player.TakeDamage(_damage, _pushPower, transform.position.x);
-                }
             }
         }         
     }

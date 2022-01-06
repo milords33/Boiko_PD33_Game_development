@@ -8,6 +8,7 @@ public class Treasure : MonoBehaviour
     [SerializeField] Sprite _activeSprite;
     [SerializeField] AudioSource _treasureOpened;
     [SerializeField] AudioSource _moneyTaked;
+    [SerializeField] 
 
     private SpriteRenderer _spriteRenderer;
     private bool Activated = false;

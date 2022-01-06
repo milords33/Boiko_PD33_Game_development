@@ -35,6 +35,7 @@ public class EndLevelDoor : MonoBehaviour
         PlayerPrefs.SetInt("loadingLevel", _levelToLoad);
         PlayerPrefs.SetInt("CoinsAmount", player.CoinsAmount);
         PlayerPrefs.SetInt("HitPoints", player.CurrentHitPoints);
+        PlayerPrefs.SetInt("ManaPoints", player.CurrentManaPoints);
     }
 
     private void LoadNextScene()

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    [SerializeField] public SpriteRenderer SpriteRenderer;
+    [SerializeField] public SpriteRenderer _spriteRenderer;
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private float _pushPower;
     [SerializeField] private float _speed;
@@ -16,15 +16,16 @@ public class Arrow : MonoBehaviour
         PlayerMover player = other.GetComponent<PlayerMover>();
         if (player != null)
             player.TakeDamage(_damage, _pushPower);
-        Destroy();
+        DestroyObject();
     }
-    private void Destroy()
+
+    private void DestroyObject()
     {
         Destroy(gameObject);
     }
     public void StartFly(Vector2 direction)
     {
         _rigidbody.velocity = direction * _speed;
-        Invoke(nameof(Destroy), 5f);
+        Invoke(nameof(DestroyObject), 5f);
     }
 }

@@ -8,6 +8,7 @@ public class EnemyArcher : MonoBehaviour
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private GameObject _archer;
     [SerializeField] private GameObject _hitEffect;
+    [SerializeField] private PlayerMover _player;
     [SerializeField] private CapsuleCollider2D _collider;
     [SerializeField] private Transform _shootPoint;
     [SerializeField] private LayerMask _whatIsPlayer;
@@ -29,8 +30,6 @@ public class EnemyArcher : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private Slider _hitPointsBar;
-
-    private PlayerMover _player;
     private bool _hurt = false;
     private bool _canShoot;
     private bool _death;
@@ -52,19 +51,18 @@ public class EnemyArcher : MonoBehaviour
         ChangeHitPoints(_maxHitPoints);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+/*    private void OnCollisionEnter2D(Collision2D other)
     {
         if (_currentHitPoints > 0)
         {
             PlayerMover player = other.collider.GetComponent<PlayerMover>();
-            _player = player;
             if (player != null)
             {
                 if (player.CanAttackEnemy)
                     TakeDamage(player.AttackDamage);
             }
         }
-    }
+    }*/
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(_attackRange * 2, 1, 0));
@@ -140,9 +138,9 @@ public class EnemyArcher : MonoBehaviour
     {
         Arrow arrow = Instantiate(_arrowShoot, _shootPoint.position, Quaternion.identity);
         if (_faceRight)
-            arrow.SpriteRenderer.flipX = true;
+            arrow._spriteRenderer.flipX = true;
         else
-            arrow.SpriteRenderer.flipX = false;
+            arrow._spriteRenderer.flipX = false;
         arrow.StartFly(transform.right);
 
         _animator.SetBool(_shootAnimatonKey, false);

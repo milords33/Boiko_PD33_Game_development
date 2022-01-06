@@ -14,6 +14,8 @@ public class PausePanel : MonoBehaviour
     [SerializeField] private Button _saveAudioPreferences;
 
 
+    private bool _firstStart = true;
+
     private void Update()
     {
         _mixer.audioMixer.SetFloat("MusicVolume", Mathf.Lerp(-35, 0, _musicSlider.value));
@@ -38,7 +40,13 @@ public class PausePanel : MonoBehaviour
 
     private void OnEnable()
     {
-        Time.timeScale = 0;
+        if(_firstStart)
+        {
+            Time.timeScale = 0.5f;
+            _firstStart = false;
+        }
+        else
+            Time.timeScale = 0;
     }
 
     private void OnDisable()
@@ -53,7 +61,6 @@ public class PausePanel : MonoBehaviour
 
     public void GetAudioVolume()
     {
-
         if (PlayerPrefs.HasKey("MasterSlider"))
             _masterSlider.value = PlayerPrefs.GetFloat("MasterSlider");
 
@@ -63,16 +70,19 @@ public class PausePanel : MonoBehaviour
         if (PlayerPrefs.HasKey("MusicSlider"))
             _musicSlider.value = PlayerPrefs.GetFloat("MusicSlider");
 
+        Invoke(nameof(Delay), 0.01f);
     }
 
     private void SaveAudioPreferences()
     {
         PlayerPrefs.SetFloat("MasterSlider", System.Convert.ToSingle(_masterSlider.value));
-
         PlayerPrefs.SetFloat("EffectsSlider", System.Convert.ToSingle(_effectsSlider.value));
-
         PlayerPrefs.SetFloat("MusicSlider", System.Convert.ToSingle(_musicSlider.value));
-/*        Debug.Log(PlayerPrefs.GetFloat("MusicSlider"));*/
+    }
+
+    private void Delay()
+    {
+        gameObject.SetActive(false);
     }
 
 }

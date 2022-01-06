@@ -238,6 +238,7 @@ MonoBehaviour:
   _bandit: {fileID: 2009185790527905261}
   _hitEffect: {fileID: 2230244235296780936, guid: 622ce55414c56814b8604c290e7ebb51,
     type: 3}
+  _player: {fileID: 3364203173809307778, guid: abd73d281ce3176478d4d85e60d6de1c, type: 3}
   _collider: {fileID: 2009185790527905265}
   _walkRange: 3.05
   _speed: 5
