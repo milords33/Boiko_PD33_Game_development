@@ -21,6 +21,13 @@ public class EndLevelDoor : MonoBehaviour
             PlayerPrefs.SetInt("loadingLevel", _levelToLoad);
             Invoke(nameof(LoadNextScene), 1f);
         }
+
+        LoadFromMainMenu loadFromMainMenu = other.GetComponent<LoadFromMainMenu>();
+        if (loadFromMainMenu != null)
+        {
+            _spriteRenderer.sprite = _doorOpenSprite;
+            _openDoorSound.Play();
+        }
     }
 
     private void LoadNextScene()

@@ -1879,7 +1879,7 @@ GameObject:
   - component: {fileID: 423122261882399515}
   - component: {fileID: 287606483018698614}
   - component: {fileID: 8328635054983850926}
-  - component: {fileID: 2761568244986851550}
+  - component: {fileID: 1593010382311686791}
   m_Layer: 5
   m_Name: Button_MainMenu
   m_TagString: Untagged
@@ -1987,7 +1987,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2761568244986851550
+--- !u!114 &1593010382311686791
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1996,11 +1996,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5650046983781431749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: beeaf2b6b66e64b4f9f86392f75678a5, type: 3}
+  m_Script: {fileID: 11500000, guid: a01f561ba0e4dfc47ab3974d6ee4dc5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 8328635054983850926}
-  _levelToLoad: 0
 --- !u!1 &5856057302799282814
 GameObject:
   m_ObjectHideFlags: 0
@@ -4930,7 +4929,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mixer: {fileID: 24300002, guid: 0fead15c4b48d6742a19eba3813ddbad, type: 2}
-  _backgroundMusicToggle: {fileID: 0}
   _masterSlider: {fileID: 7248705474844491965}
   _musicSlider: {fileID: 7248705474164077494}
   _effectsSlider: {fileID: 8093396216927608634}
