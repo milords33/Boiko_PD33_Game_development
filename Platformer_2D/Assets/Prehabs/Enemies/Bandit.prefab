@@ -173,7 +173,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 317b8365a4649ab459f6cb58ec8f9f18, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -236,12 +236,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 2009185790527905270}
   _bandit: {fileID: 2009185790527905261}
+  _hitEffect: {fileID: 2230244235296780936, guid: 622ce55414c56814b8604c290e7ebb51,
+    type: 3}
   _collider: {fileID: 2009185790527905265}
   _walkRange: 3.05
   _speed: 5
   _pushPower: 200
   _damage: 15
   _maxHitPoints: 100
+  _coinsAmount: 10
   _faceRight: 1
   _animator: {fileID: 2009185790527905266}
   _attackAnimatorKey: Attack

@@ -211,7 +211,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: eb3711790d9a7304992355d8f5f9eeae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -235,8 +235,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db23483bd3b58448b78cb13664066b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _archer: {fileID: 3242731118928515486}
   _rigidbody: {fileID: 8077063685018349925}
+  _archer: {fileID: 3242731118928515486}
+  _hitEffect: {fileID: 2230244235296780936, guid: 622ce55414c56814b8604c290e7ebb51,
+    type: 3}
   _collider: {fileID: 3242731118928515483}
   _shootPoint: {fileID: 3242731120525472273}
   _whatIsPlayer:
@@ -246,6 +248,7 @@ MonoBehaviour:
     type: 3}
   _attackRange: 7.92
   _maxHitPoints: 100
+  _coinsAmount: 15
   _faceRight: 1
   _animator: {fileID: 3242731118928515487}
   _shootAnimatonKey: Shoot

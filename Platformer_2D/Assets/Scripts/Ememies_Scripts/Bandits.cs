@@ -7,12 +7,14 @@ public class Bandits : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private GameObject _bandit;
+    [SerializeField] private GameObject _hitEffect;
     [SerializeField] private CapsuleCollider2D _collider;
     [SerializeField] private float _walkRange;
     [SerializeField] private float _speed;
     [SerializeField] private float _pushPower;
     [SerializeField] private int _damage;
     [SerializeField] private int _maxHitPoints;
+    [SerializeField] private int _coinsAmount;
     [SerializeField] private bool _faceRight;
 
     [Header("Animation")]
@@ -30,14 +32,8 @@ public class Bandits : MonoBehaviour
     private Vector2 _startPostion;
     private bool _hurt = false;
     private int _currentHitPoints;
-/*    private int CurrentHitPoints
-    {
-        get => _currentHitPoints;
-        set
-        {
-            _currentHitPoints = value;
-        }
-    }*/
+
+    private PlayerMover _player;
 
     private void Start()
     {
@@ -85,6 +81,7 @@ public class Bandits : MonoBehaviour
         if (_currentHitPoints > 0)
         {
             PlayerMover player = other.collider.GetComponent<PlayerMover>();
+            _player = player;
             if (player != null)
             {
                 if (player.CanAttackEnemy)
@@ -95,7 +92,7 @@ public class Bandits : MonoBehaviour
                     player.TakeDamage(_damage, _pushPower, transform.position.x);
                 }
             }
-        }
+        }         
     }
     private Vector2 _drawPostion
     {
@@ -113,10 +110,12 @@ public class Bandits : MonoBehaviour
         _hurt = true;
         _hitSound.Play();
         _animator.SetTrigger(_hurtAnimatorKey);
+        Instantiate(_hitEffect, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
 
         ChangeHitPoints(_currentHitPoints - damage);
         if (_currentHitPoints <= 0)
         {
+            _player.CoinsAmount += _coinsAmount;
             _animator.SetTrigger(_deathAnimatorKey);
             _rigidbody.simulated = false;
             _collider.enabled = false;

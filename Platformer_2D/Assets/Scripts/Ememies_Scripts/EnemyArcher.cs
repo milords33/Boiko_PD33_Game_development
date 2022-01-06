@@ -5,14 +5,16 @@ using UnityEngine.UI;
 
 public class EnemyArcher : MonoBehaviour
 {
-    [SerializeField] private GameObject _archer;
     [SerializeField] private Rigidbody2D _rigidbody;
+    [SerializeField] private GameObject _archer;
+    [SerializeField] private GameObject _hitEffect;
     [SerializeField] private CapsuleCollider2D _collider;
     [SerializeField] private Transform _shootPoint;
     [SerializeField] private LayerMask _whatIsPlayer;
     [SerializeField] private Arrow _arrowShoot;
     [SerializeField] private float _attackRange;
     [SerializeField] private int _maxHitPoints;
+    [SerializeField] private int _coinsAmount;
     [SerializeField] private bool _faceRight;
 
     [Header("Animation")]
@@ -28,6 +30,7 @@ public class EnemyArcher : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Slider _hitPointsBar;
 
+    private PlayerMover _player;
     private bool _hurt = false;
     private bool _canShoot;
     private bool _death;
@@ -42,6 +45,7 @@ public class EnemyArcher : MonoBehaviour
              _hitPointsBar.value = _currentHitPoints;
         }
     }
+
     private void Start()
     {
         _hitPointsBar.maxValue = _maxHitPoints;
@@ -53,6 +57,7 @@ public class EnemyArcher : MonoBehaviour
         if (_currentHitPoints > 0)
         {
             PlayerMover player = other.collider.GetComponent<PlayerMover>();
+            _player = player;
             if (player != null)
             {
                 if (player.CanAttackEnemy)
@@ -112,9 +117,11 @@ public class EnemyArcher : MonoBehaviour
         CurrentHitPoints -= damage;
         _hitSound.Play();
         _animator.SetTrigger(_hurtAnimatorKey);
+        Instantiate(_hitEffect, transform.position + new Vector3(0.2f, -0.3f, 0), Quaternion.identity);
 
         if (CurrentHitPoints <= 0)
         {
+            _player.CoinsAmount += _coinsAmount;
             _animator.SetTrigger(_deathAnimatorKey);
             _rigidbody.simulated = false;
             _collider.enabled = false;

@@ -12,7 +12,7 @@ public class Treasure : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private bool Activated = false;
 
-    PlayerMover _player;
+    private PlayerMover _player;
 
     void Start()
     {

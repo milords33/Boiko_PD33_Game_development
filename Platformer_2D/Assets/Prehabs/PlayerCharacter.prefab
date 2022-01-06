@@ -342,7 +342,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -220.9, y: -20.7}
+  m_AnchoredPosition: {x: -196, y: -20.7}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3385747459392527340
@@ -1093,7 +1093,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4373785988418844777}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.2514286, y: 1.68, z: -10}
+  m_LocalPosition: {x: 2.8227196, y: 1.68, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4373785986950378784}
@@ -3530,6 +3530,10 @@ MonoBehaviour:
   _AttackRange: {fileID: 7248705474396530952}
   _attackDamage: 50
   _attackPushPower: 100
+  _groundEffect: {fileID: 3520578476409178791, guid: 4d4a2d5b7633e9b41bbd57755e999d65,
+    type: 3}
+  _hitEffect: {fileID: 2230244235296780936, guid: 622ce55414c56814b8604c290e7ebb51,
+    type: 3}
   _animator: {fileID: 7248705473912787854}
   _runAnimatorKey: Speed
   _jumpBoolAnimatorKey: JumpBool

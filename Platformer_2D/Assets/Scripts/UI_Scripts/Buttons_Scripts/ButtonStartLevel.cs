@@ -12,6 +12,7 @@ public class ButtonStartLevel : MonoBehaviour
     [SerializeField] private GameObject _canvas;
 
     private const string NEWGAME = "ButtonNewGame";
+    private const string LEVEL1 = "ButtonLevel1";
 
     private void Awake()
     {
@@ -20,9 +21,13 @@ public class ButtonStartLevel : MonoBehaviour
 
     private void OnButtonClickHandler()
     {
-       if (_button.name == NEWGAME)
+        if (_button.name == NEWGAME || _button.name == LEVEL1)
+        {
             PlayerPrefs.DeleteKey("loadingLevel");
+            PlayerPrefs.DeleteKey("CoinsAmount");
+        }
 
+        PlayerPrefs.DeleteKey("HitPoints");
         _canvas.SetActive(false);
         _loading.AnimationEventRun();
         Invoke(nameof(LoadLevel), 2.2f);

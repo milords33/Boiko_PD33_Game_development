@@ -11,28 +11,27 @@ public class PlayerMover : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
 
+    [Header("Player preferences")]
     [SerializeField] private float _speed;
     [SerializeField] private float _rollForce;
-
     [SerializeField] private SpriteRenderer _spriteRenderer;
-
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private LayerMask _whatIsGround;
     [SerializeField] private LayerMask _whatIsCell;
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private float _jumpForce;
-
     [SerializeField] private Collider2D _topBodyCollider;
     [SerializeField] private Transform _topBodyChecker;
     [SerializeField] private float _topBodyCheckerRadius;
-
     [SerializeField] private int _maxHitPoints;
     [SerializeField] private int _maxShieldPoints;
-
     [SerializeField] private Collider2D _AttackRange;
     [SerializeField] private int _attackDamage;
     [SerializeField] private float _attackPushPower;
 
+    [Header("Effects")]
+    [SerializeField] private GameObject _groundEffect;
+    [SerializeField] private GameObject _hitEffect;
 
     [Header("Animation")]
     [SerializeField] private Animator _animator;
@@ -125,18 +124,25 @@ public class PlayerMover : MonoBehaviour
         _pausePanelClass.GetAudioVolume();
         _pausePanelGameObject.SetActive(_checkActiveMenuPanel);
         _hitPointsBar.maxValue = _maxHitPoints;
-        CurrentHitPoints = _maxHitPoints;
+
         AttackDamage = _attackDamage;
         AttackPushPower = _attackPushPower;
         _AttackRange.enabled = false;
         CanAttackEnemy = false;
         _death = false;
-
+        _rigidbody = GetComponent<Rigidbody2D>();
         _shieldPointsBar.maxValue = _maxShieldPoints;
         CurrentShieldPoints = _maxShieldPoints;
-        CoinsAmount = 0;
 
-        _rigidbody = GetComponent<Rigidbody2D>();
+        if (PlayerPrefs.HasKey("HitPoints"))
+            CurrentHitPoints = PlayerPrefs.GetInt("HitPoints");
+        else
+            CurrentHitPoints = _maxHitPoints;
+
+        if (PlayerPrefs.HasKey("CoinsAmount"))
+            CoinsAmount = PlayerPrefs.GetInt("CoinsAmount");
+        else
+            CoinsAmount = 0;
     }
 
     private void Update()
@@ -302,6 +308,7 @@ public class PlayerMover : MonoBehaviour
             _hurtSound.Play();
             _hurt = true;
             _hitSound.Play();
+            Instantiate(_hitEffect, transform.position + new Vector3(0, 1f, 0), Quaternion.identity);
         }
 
         if (CurrentHitPoints <= 0)
@@ -325,6 +332,7 @@ public class PlayerMover : MonoBehaviour
     // for spikes
     public void TakeDamage(int damage)
     {
+        Instantiate(_hitEffect, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
         CurrentHitPoints -= damage;
         _hurtSound.Play();
         _hurt = true;
@@ -342,7 +350,6 @@ public class PlayerMover : MonoBehaviour
 
     private void ReloadScene()
     {
-        //_pausePanelClass.SetAudioVolume();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -359,6 +366,7 @@ public class PlayerMover : MonoBehaviour
 
     private void AnimationEvent_RunSound()
     {
+        Instantiate(_groundEffect, transform.position + new Vector3(0,0.15f,0), Quaternion.identity);
         _runSound.pitch = Random.Range(0.8f, 1.1f);
         _runSound.Play();
     }

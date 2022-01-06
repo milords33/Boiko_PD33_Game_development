@@ -18,7 +18,7 @@ public class EndLevelDoor : MonoBehaviour
         {
             _spriteRenderer.sprite = _doorOpenSprite;
             _openDoorSound.Play();
-            PlayerPrefs.SetInt("loadingLevel", _levelToLoad);
+            SaveProgress(player);
             Invoke(nameof(LoadNextScene), 1f);
         }
 
@@ -28,6 +28,13 @@ public class EndLevelDoor : MonoBehaviour
             _spriteRenderer.sprite = _doorOpenSprite;
             _openDoorSound.Play();
         }
+    }
+    
+    private void SaveProgress(PlayerMover player)
+    {
+        PlayerPrefs.SetInt("loadingLevel", _levelToLoad);
+        PlayerPrefs.SetInt("CoinsAmount", player.CoinsAmount);
+        PlayerPrefs.SetInt("HitPoints", player.CurrentHitPoints);
     }
 
     private void LoadNextScene()
