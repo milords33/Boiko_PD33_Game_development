@@ -357,6 +357,8 @@ MonoBehaviour:
   _activeSprite: {fileID: 21300012, guid: ae3918a914038694d852d0bb81f62473, type: 3}
   _treasureOpened: {fileID: 3403412761238717366}
   _moneyTaked: {fileID: 3403412759960510071}
+  _coinsEffect: {fileID: 8287316865396858675, guid: c2f2552d6070a7a40b8c4c6d23044f21,
+    type: 3}
 --- !u!61 &3403412761271391294
 BoxCollider2D:
   m_ObjectHideFlags: 0

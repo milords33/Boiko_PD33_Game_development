@@ -19,9 +19,9 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _topBodyCheckerRadius;
-    [SerializeField] private int _maxHitPoints;
-    [SerializeField] private int _maxManaPoints;
-    [SerializeField] private int _maxShieldPoints;
+    //[SerializeField] private int _maxHitPoints;
+    //[SerializeField] private int _maxManaPoints;
+   // [SerializeField] private int _maxShieldPoints;
 
     [Header("PlayerElements")]
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -36,7 +36,6 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private Transform _swordAttackPoint;
     [SerializeField] private float _swordAttackPushPower;
     [SerializeField] private float _swordAttackRadius;
-    [SerializeField] private int _swordDamage;
     [SerializeField] private int _manaForCast;
 
     [SerializeField] private bool _faceRight;
@@ -47,7 +46,6 @@ public class PlayerMover : MonoBehaviour
     [Header("Effects")]
     [SerializeField] private GameObject _groundEffect;
     [SerializeField] private GameObject _hitEffect;
-    //[SerializeField] private GameObject _magicEffect;
 
     [Header("Animation")]
     [SerializeField] private Animator _animator;
@@ -82,6 +80,13 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private AudioSource _swingSound;
     [SerializeField] private AudioSource _shieldActivated;
     [SerializeField] private AudioSource _shieldProtected;
+    [SerializeField] private AudioSource _magicSound;
+
+
+    private int _maxHitPoints;
+    private int _maxManaPoints;
+    private int _maxShieldPoints;
+    private int _attackDamage;
 
     private float _horizontalDirection;
     private bool _roll = false;
@@ -91,17 +96,20 @@ public class PlayerMover : MonoBehaviour
     private float _timeSinceAttack = 0.0f;
     private float _lastPushTime;
 
-    private const int _shieldProtectPoints = 25;
+    private const int SHIELD_PROTECT_POINTS = 25;
+    private const int STANDART_CHARACTERISTICS = 100;
     private int _currentShieldPoints;
     private int _currentHitPoints;
     private int _currentManaPoints;
 
+    private bool _magicCast = false;
     private bool _shieldActive;
     private bool _hurt;
     private bool _death;
 
     private int _coinsAmount;
-    private bool _checkActiveMenuPanel = false; 
+    private bool _checkActiveMenuPanel = false;
+    private bool _trade = false;
 
     public float SwordAttackPushPower { get; set; }
 
@@ -115,13 +123,40 @@ public class PlayerMover : MonoBehaviour
         }
     }
 
+    public int MaxHitPoints
+    {
+        get => _maxHitPoints;
+        set
+        {
+            _maxHitPoints = value;
+        }
+    }
+
+    public int MaxManaPoints
+    {
+        get => _maxManaPoints;
+        set
+        {
+            _maxManaPoints = value;
+        }
+    }
+
+    public int MaxShieldPoints
+    {
+        get => _maxShieldPoints;
+        set
+        {
+            _maxShieldPoints = value;
+        }
+    }
+
     public int CurrentHitPoints
     {
         get => _currentHitPoints;
         set
         {
             _currentHitPoints = value;
-            _hitPointsBar.value = _currentHitPoints;
+             _hitPointsBar.value = _currentHitPoints;
         }
     }
 
@@ -145,6 +180,28 @@ public class PlayerMover : MonoBehaviour
         }
     }
 
+    public int AttackDamage
+    {
+        get => _attackDamage;
+        set
+        {
+            _attackDamage = value;
+        }
+    }
+
+    public bool Trade
+    {
+        get => _trade;
+        set
+        {
+            _trade = value;
+        }
+    }
+
+    private void Awake()
+    {
+        SetCharacteristics();
+    }
 
     private void Start()
     {   
@@ -180,7 +237,7 @@ public class PlayerMover : MonoBehaviour
         if (Input.GetKey(KeyCode.R))
             ReloadScene();
 
-        if (!_death)
+        if (!_death && !_magicCast)
         {
             #region Movement
             _horizontalDirection = Input.GetAxisRaw("Horizontal");
@@ -211,7 +268,7 @@ public class PlayerMover : MonoBehaviour
 
             #region Attacks
             _timeSinceAttack += Time.deltaTime;
-            if (Input.GetKey(KeyCode.Mouse0) && _timeSinceAttack > 0.25f && !_roll)
+            if (Input.GetKey(KeyCode.Mouse0) && _timeSinceAttack > 0.25f && !_roll && !_trade)
             {
                 _swingSound.Play();
                 _needToAttack = true;
@@ -228,10 +285,7 @@ public class PlayerMover : MonoBehaviour
             #endregion
 
             if (Input.GetKeyDown(KeyCode.F) && CurrentManaPoints >= _manaForCast)
-            {
-                CurrentManaPoints -= _manaForCast;
                 _animator.SetBool(_magicWaveAnimatorKey, true);
-            }
 
             #region Shield
             if (Input.GetKeyDown(KeyCode.Mouse1) && !_roll)
@@ -248,7 +302,7 @@ public class PlayerMover : MonoBehaviour
             }
             #endregion
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && !_trade)
             {
                 _pausePanelGameObject.SetActive(!_checkActiveMenuPanel);
                 _checkActiveMenuPanel = !_checkActiveMenuPanel;
@@ -331,7 +385,7 @@ public class PlayerMover : MonoBehaviour
 
     private void RestoreShieldPoints()
     {
-        CurrentShieldPoints += _shieldProtectPoints;
+        CurrentShieldPoints += SHIELD_PROTECT_POINTS;
     }
 
     private void ReloadScene()
@@ -355,7 +409,7 @@ public class PlayerMover : MonoBehaviour
 
         if(_shieldActive && CurrentShieldPoints > 0)
         {
-            CurrentShieldPoints -= _shieldProtectPoints;
+            CurrentShieldPoints -= SHIELD_PROTECT_POINTS;
             _shieldProtected.Play();
             Invoke(nameof(RestoreShieldPoints), 15f);
         }
@@ -380,8 +434,8 @@ public class PlayerMover : MonoBehaviour
         if(pushPower != 0)
         {
             _lastPushTime = Time.time;
-            int direction = transform.position.x > enemyPosX ? 1 : 1;
-            _rigidbody.AddForce(new Vector2(direction * pushPower/2, pushPower));
+            int direction = transform.position.x > enemyPosX ? 1 : -1;
+            _rigidbody.AddForce(new Vector2(direction * pushPower, pushPower / 6));
             _animator.SetBool(_hurtAnimatorKey, _hurt);
         }
     }
@@ -423,17 +477,45 @@ public class PlayerMover : MonoBehaviour
             EnemyArcher archer = target.GetComponent<EnemyArcher>();
             if (archer != null)
             {
-                archer.TakeDamage(_swordDamage);
+                archer.TakeDamage(_attackDamage);
             }
 
             Bandits bandit = target.GetComponent<Bandits>();
             if (bandit != null)
             {
-                bandit.TakeDamage(_swordDamage, _swordAttackPushPower, transform.position.x);
+                bandit.TakeDamage(_attackDamage, _swordAttackPushPower, transform.position.x);
+            }
+            ArrowLauncher arrowLauncer = target.GetComponent<ArrowLauncher>();
+            if (arrowLauncer != null)
+            {
+                arrowLauncer.TakeDamage(_attackDamage);
             }
         }
         _animator.SetBool(_attackAnimatorKey, false);
         _needToAttack = false;
+    }
+
+    private void SetCharacteristics()
+    {
+        if (PlayerPrefs.HasKey("MaxHitPoints"))
+            _maxHitPoints = PlayerPrefs.GetInt("MaxHitPoints");
+        else
+            _maxHitPoints = STANDART_CHARACTERISTICS;
+
+        if (PlayerPrefs.HasKey("MaxManaPoints"))
+            _maxManaPoints = PlayerPrefs.GetInt("MaxManaPoints");
+        else
+            _maxManaPoints = STANDART_CHARACTERISTICS;
+
+        if (PlayerPrefs.HasKey("MaxShieldPoints"))
+            _maxShieldPoints = PlayerPrefs.GetInt("MaxShieldPoints");
+        else
+            _maxShieldPoints = STANDART_CHARACTERISTICS;
+
+        if (PlayerPrefs.HasKey("AttackDamage"))
+            _attackDamage = PlayerPrefs.GetInt("AttackDamage");
+        else
+            _attackDamage = STANDART_CHARACTERISTICS/2;
     }
 
 
@@ -450,11 +532,18 @@ public class PlayerMover : MonoBehaviour
         _runSound.Play();
     }
 
-    private void AnimationEventMagicWave()
+    private void AnimationEventStartCastMagic()
+    {
+        _magicCast = true;
+        _magicSound.Play();
+        CurrentManaPoints -= _manaForCast;
+    }
+
+    private void AnimationEventEndCastMagic()
     {
         MagicWave magicWave = Instantiate(_magicWave, _shootPoint.position, Quaternion.identity);
-
-        magicWave.StartFly();
+        magicWave.StartFly(_faceRight);
+        _magicCast = false;
         _animator.SetBool(_magicWaveAnimatorKey, false);
         CurrentManaPoints -= _manaForCast;
     }

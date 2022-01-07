@@ -33,8 +33,11 @@ public class MagicWave : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void StartFly()
+    public void StartFly(bool faceRight)
     {
+        if(!faceRight)
+            transform.Rotate(0, 180, 0);
+
         _rigidbody.velocity = transform.right * _speed;
         Invoke(nameof(Destroy), _delay);
     }

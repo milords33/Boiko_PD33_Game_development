@@ -25,6 +25,7 @@ public class ButtonStartLevel : MonoBehaviour
         {
             PlayerPrefs.DeleteKey("loadingLevel");
             PlayerPrefs.DeleteKey("CoinsAmount");
+            PlayerPrefs.DeleteKey("ManaPoints");
         }
 
         PlayerPrefs.DeleteKey("HitPoints");

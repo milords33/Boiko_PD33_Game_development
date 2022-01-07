@@ -113,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitPoints: 30
+  _healEffect: {fileID: 2755179627107176232, guid: 88ffd59d210306f448fdc30ba9f67a3e,
+    type: 3}
 --- !u!95 &408263340851859061
 Animator:
   serializedVersion: 3

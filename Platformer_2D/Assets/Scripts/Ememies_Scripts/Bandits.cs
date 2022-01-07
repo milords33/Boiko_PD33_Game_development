@@ -12,11 +12,16 @@ public class Bandits : MonoBehaviour
     [SerializeField] private CapsuleCollider2D _collider;
     [SerializeField] private float _walkRange;
     [SerializeField] private float _speed;
-    [SerializeField] private float _pushPower;
-    [SerializeField] private int _damage;
     [SerializeField] private int _maxHitPoints;
     [SerializeField] private int _coinsAmount;
     [SerializeField] private bool _faceRight;
+
+    [Header("Attack")]
+    [SerializeField] private LayerMask _whatIsPlayer;
+    [SerializeField] private Transform _attackPoint;
+    [SerializeField] private float _pushPower;
+    [SerializeField] private float _attackRadius;
+    [SerializeField] private int _damage;
 
     [Header("Animation")]
     [SerializeField] private Animator _animator;
@@ -34,17 +39,16 @@ public class Bandits : MonoBehaviour
     private bool _hurt = false;
     private int _currentHitPoints;
 
+    private float _startSpeed;
+
     private void Start()
     {
+        _startSpeed = _speed;
         _hitPointsBar.maxValue = _maxHitPoints;
         ChangeHitPoints(_maxHitPoints);
         _startPostion = transform.position;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(_drawPostion, new Vector3(_walkRange * 2, 1, 0));
-    }
 
     private void FixedUpdate()
     {
@@ -54,7 +58,7 @@ public class Bandits : MonoBehaviour
 
     private void Update()
     {
-        if (_currentHitPoints > 0)
+        if (_currentHitPoints > 0 && !_hurt)
         {
             float xPos = transform.position.x;
             if (xPos > _startPostion.x + _walkRange && _faceRight)
@@ -68,6 +72,23 @@ public class Bandits : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        PlayerMover player = other.GetComponent<PlayerMover>();
+        if (player != null)
+        {
+            _speed = 0f;
+            _animator.SetTrigger(_attackAnimatorKey);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(_drawPostion, new Vector3(_walkRange * 2, 1, 0));
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_attackPoint.position, new Vector3(_attackRadius, _attackRadius, 0));
+    }
+
     private void Flip()
     {
         _faceRight = !_faceRight;
@@ -75,18 +96,6 @@ public class Bandits : MonoBehaviour
         _hitPointsBar.transform.Rotate(0, 180, 0);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (_currentHitPoints > 0)
-        {
-            PlayerMover player = other.collider.GetComponent<PlayerMover>();
-            if (player != null)
-            {
-                    _animator.SetTrigger(_attackAnimatorKey);
-                    player.TakeDamage(_damage, _pushPower, transform.position.x);
-            }
-        }         
-    }
     private Vector2 _drawPostion
     {
         get
@@ -109,15 +118,14 @@ public class Bandits : MonoBehaviour
         if (_currentHitPoints <= 0)
         {
             _player.CoinsAmount += _coinsAmount;
-            _animator.SetTrigger(_deathAnimatorKey);
+            _animator.SetBool(_deathAnimatorKey, true);
             _rigidbody.simulated = false;
-            _collider.enabled = false;
         }
         else
         {
             if (pushPower != 0)
             {
-                int direction = transform.position.x > heroPosX ? 1 : 1;
+                int direction = transform.position.x > heroPosX ? 1 : -1;
                 _rigidbody.AddForce(new Vector2(direction * pushPower, 0));
             }
         }
@@ -137,5 +145,24 @@ public class Bandits : MonoBehaviour
     private void AnimationEventHurt()
     {
         _hurt = false;
+    }
+
+    private void AnimationEventAttack()
+    { 
+        Collider2D[] targets = Physics2D.OverlapBoxAll(_attackPoint.position,
+new Vector2(_attackRadius, _attackRadius), _whatIsPlayer);
+
+        foreach (var target in targets)
+        {
+            PlayerMover player = target.GetComponent<PlayerMover>();
+            if (player != null)
+                player.TakeDamage(_damage, _pushPower, transform.position.x);
+        }
+        Invoke(nameof(InvokeMovement), 1f);
+    }
+    
+    private void InvokeMovement()
+    {
+        _speed = _startSpeed;
     }
 }
