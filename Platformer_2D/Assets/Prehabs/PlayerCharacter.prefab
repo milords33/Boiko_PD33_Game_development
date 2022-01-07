@@ -2516,7 +2516,7 @@ RectTransform:
   - {fileID: 8669518094099387437}
   - {fileID: 775911338946179294}
   m_Father: {fileID: 3364203173948533473}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -4036,9 +4036,6 @@ MonoBehaviour:
   _groundCheckerRadius: 0.25
   _jumpForce: 350
   _topBodyCheckerRadius: 0.2
-  _maxHitPoints: 100
-  _maxManaPoints: 100
-  _maxShieldPoints: 100
   _spriteRenderer: {fileID: 3364203173809307791}
   _topBodyCollider: {fileID: 3364203173809307789}
   _topBodyChecker: {fileID: 3364203173406426823}
@@ -4052,7 +4049,6 @@ MonoBehaviour:
   _swordAttackPoint: {fileID: 5354355362719806482}
   _swordAttackPushPower: 150
   _swordAttackRadius: 1.9
-  _swordDamage: 50
   _manaForCast: 100
   _faceRight: 1
   _groundEffect: {fileID: 3520578476409178791, guid: 4d4a2d5b7633e9b41bbd57755e999d65,
@@ -4072,9 +4068,9 @@ MonoBehaviour:
   _deathAnimatorKey: Death
   _attackAnimatorKey: Attack
   _coinsAmountText: {fileID: 3364203173511852273}
-  _hitPointsBar: {fileID: 3364203174445624806}
-  _shieldPointsBar: {fileID: 3364203174320125609}
-  _manaPointsBar: {fileID: 6324520566378146619}
+  _hitPointsSlider: {fileID: 3364203174445624806}
+  _shieldPointsSlider: {fileID: 3364203174320125609}
+  _manaPointsSlider: {fileID: 6324520566378146619}
   _pausePanelGameObject: {fileID: 3364203173024542531}
   _pausePanelClass: {fileID: 3364203173024542535}
   _runSound: {fileID: 597537145347407718}
@@ -4227,10 +4223,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 3364203173024542528}
   - {fileID: 3364203174445624801}
   - {fileID: 3364203174320125608}
   - {fileID: 6919754096854001062}
+  - {fileID: 3364203173024542528}
   - {fileID: 2215515673937277481}
   - {fileID: 4414234624199462728}
   - {fileID: 3364203172921703440}
@@ -4816,11 +4812,11 @@ RectTransform:
   - {fileID: 3364203172916157078}
   - {fileID: 3364203173341652301}
   m_Father: {fileID: 3364203173948533473}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 249, y: -70}
+  m_AnchoredPosition: {x: 250, y: -70}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3364203174320125609
@@ -5165,11 +5161,11 @@ RectTransform:
   - {fileID: 3364203173809974792}
   - {fileID: 3364203174207222074}
   m_Father: {fileID: 3364203173948533473}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 249, y: -30}
+  m_AnchoredPosition: {x: 250, y: -30}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3364203174445624806
@@ -9225,11 +9221,11 @@ RectTransform:
   - {fileID: 118377490777893310}
   - {fileID: 3328009259135747781}
   m_Father: {fileID: 3364203173948533473}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 249.00005, y: -110}
+  m_AnchoredPosition: {x: 250, y: -110}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6324520566378146619

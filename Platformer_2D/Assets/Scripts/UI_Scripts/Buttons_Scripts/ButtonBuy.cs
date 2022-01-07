@@ -56,12 +56,12 @@ public class ButtonBuy : MonoBehaviour
 
     private void IncreaseHitPotion()
     {
-        _player.MaxHitPoints += 100;
+        _player.ChangeSliderValue("Slider_HitPoints", 25);
     }
 
     private void IncreaseManaPotion()
     {
-        _player.MaxManaPoints += 100;
+        _player.ChangeSliderValue("Slider_ManaPoints", 25);
     }
 
     private void Poison()

@@ -19,9 +19,6 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _topBodyCheckerRadius;
-    //[SerializeField] private int _maxHitPoints;
-    //[SerializeField] private int _maxManaPoints;
-   // [SerializeField] private int _maxShieldPoints;
 
     [Header("PlayerElements")]
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -63,9 +60,9 @@ public class PlayerMover : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private TMP_Text _coinsAmountText;
-    [SerializeField] private Slider _hitPointsBar;
-    [SerializeField] private Slider _shieldPointsBar;
-    [SerializeField] private Slider _manaPointsBar;
+    [SerializeField] private Slider _hitPointsSlider;
+    [SerializeField] private Slider _shieldPointsSlider;
+    [SerializeField] private Slider _manaPointsSlider;
     [SerializeField] private GameObject _pausePanelGameObject;
     [SerializeField] private PausePanel _pausePanelClass;
 
@@ -156,7 +153,7 @@ public class PlayerMover : MonoBehaviour
         set
         {
             _currentHitPoints = value;
-             _hitPointsBar.value = _currentHitPoints;
+             _hitPointsSlider.value = _currentHitPoints;
         }
     }
 
@@ -166,7 +163,7 @@ public class PlayerMover : MonoBehaviour
         set
         {
             _currentShieldPoints = value;
-            _shieldPointsBar.value = _currentShieldPoints;
+            _shieldPointsSlider.value = _currentShieldPoints;
         }
     }
 
@@ -176,7 +173,7 @@ public class PlayerMover : MonoBehaviour
         set
         {
             _currentManaPoints = value;
-            _manaPointsBar.value = _currentManaPoints;
+            _manaPointsSlider.value = _currentManaPoints;
         }
     }
 
@@ -203,33 +200,86 @@ public class PlayerMover : MonoBehaviour
         SetCharacteristics();
     }
 
-    private void Start()
-    {   
-        _pausePanelClass.GetAudioVolume();
+    public void ChangeSliderValue(string sliderName, int value)
+    {
+        if (sliderName == _hitPointsSlider.gameObject.name)
+        {
+            _maxHitPoints += value;
+            _hitPointsSlider.maxValue = _maxHitPoints;
+            RectTransform rectTransfrom = _hitPointsSlider.GetComponent<RectTransform>();
+            rectTransfrom.sizeDelta += new Vector2(15f, 0);
+            rectTransfrom.localPosition += new Vector3(22.5f, 0, 0);
+        }
+        else if (sliderName == _manaPointsSlider.gameObject.name)
+        {
+            _maxManaPoints += value;
+            _manaPointsSlider.maxValue = _maxManaPoints;
+            RectTransform rectTransfrom = _manaPointsSlider.GetComponent<RectTransform>();
+            rectTransfrom.sizeDelta += new Vector2(15f, 0);
+            rectTransfrom.localPosition += new Vector3(22.5f, 0, 0);
+        }
+        else if (sliderName == _shieldPointsSlider.gameObject.name)
+        {
+            _maxShieldPoints += value;
+            _shieldPointsSlider.maxValue = _maxShieldPoints;
+            RectTransform rectTransfrom = _shieldPointsSlider.GetComponent<RectTransform>();
+            rectTransfrom.sizeDelta += new Vector2(15f, 0);
+            rectTransfrom.localPosition += new Vector3(22.5f, 0, 0);
+        }
+        else
+            throw new System.Exception("Invalid Slider Name");
+    }
 
-        _hitPointsBar.maxValue = _maxHitPoints;
+    private void LoadData()
+    {
+        _hitPointsSlider.maxValue = _maxHitPoints;
+        _shieldPointsSlider.maxValue = _maxShieldPoints;
+        _manaPointsSlider.maxValue = _maxManaPoints;
+
 
         SwordAttackPushPower = _swordAttackPushPower;
-        _death = false;
-
-        _shieldPointsBar.maxValue = _maxShieldPoints;
         CurrentShieldPoints = _maxShieldPoints;
 
-        _rigidbody = GetComponent<Rigidbody2D>();
         if (PlayerPrefs.HasKey("HitPoints"))
+        {
             CurrentHitPoints = PlayerPrefs.GetInt("HitPoints");
+            int count = System.Convert.ToInt32(_hitPointsSlider.maxValue / 25 - 4);
+            RectTransform rectTransfrom = _hitPointsSlider.GetComponent<RectTransform>();
+            for (int i = 0; i < count; i++)
+            {
+                rectTransfrom.sizeDelta += new Vector2(15f, 0);
+                rectTransfrom.localPosition += new Vector3(22.5f, 0, 0);
+            }
+        }
         else
             CurrentHitPoints = _maxHitPoints;
+
+        if (PlayerPrefs.HasKey("ManaPoints"))
+        {
+            CurrentManaPoints = PlayerPrefs.GetInt("ManaPoints");
+            int count = System.Convert.ToInt32(_manaPointsSlider.maxValue / 25 - 4);
+            RectTransform rectTransfrom = _manaPointsSlider.GetComponent<RectTransform>();
+            for (int i = 0; i < count; i++)
+            {
+                rectTransfrom.sizeDelta += new Vector2(15f, 0);
+                rectTransfrom.localPosition += new Vector3(22.5f, 0, 0);
+            }
+        }
+        else
+            CurrentManaPoints = _maxManaPoints;
 
         if (PlayerPrefs.HasKey("CoinsAmount"))
             CoinsAmount = PlayerPrefs.GetInt("CoinsAmount");
         else
             CoinsAmount = 0;
+    }
 
-        if (PlayerPrefs.HasKey("ManaPoints"))
-            CurrentManaPoints = PlayerPrefs.GetInt("ManaPoints");
-        else
-            CurrentManaPoints = _maxManaPoints;
+    private void Start()
+    {   
+        _pausePanelClass.GetAudioVolume();
+        _death = false;
+        _rigidbody = GetComponent<Rigidbody2D>();
+        LoadData();
     }
 
     private void Update()
@@ -545,7 +595,6 @@ public class PlayerMover : MonoBehaviour
         magicWave.StartFly(_faceRight);
         _magicCast = false;
         _animator.SetBool(_magicWaveAnimatorKey, false);
-        CurrentManaPoints -= _manaForCast;
     }
     #endregion
 }

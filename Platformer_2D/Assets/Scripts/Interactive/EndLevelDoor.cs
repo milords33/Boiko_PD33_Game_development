@@ -36,6 +36,12 @@ public class EndLevelDoor : MonoBehaviour
         PlayerPrefs.SetInt("CoinsAmount", player.CoinsAmount);
         PlayerPrefs.SetInt("HitPoints", player.CurrentHitPoints);
         PlayerPrefs.SetInt("ManaPoints", player.CurrentManaPoints);
+
+        PlayerPrefs.SetInt("MaxHitPoints", player.MaxHitPoints);
+        PlayerPrefs.SetInt("MaxManaPoints", player.MaxManaPoints);
+        PlayerPrefs.SetInt("MaxShieldPoints", player.MaxShieldPoints);
+        PlayerPrefs.SetInt("AttackDamage", player.AttackDamage);
+
     }
 
     private void LoadNextScene()

@@ -21,19 +21,21 @@ public class ButtonStartLevel : MonoBehaviour
 
     private void OnButtonClickHandler()
     {
-        if (_button.name == NEWGAME || _button.name == LEVEL1)
-        {
-            PlayerPrefs.DeleteKey("loadingLevel");
-            PlayerPrefs.DeleteKey("CoinsAmount");
-            PlayerPrefs.DeleteKey("ManaPoints");
-        }
+        PlayerPrefs.DeleteKey("loadingLevel");
+        PlayerPrefs.DeleteKey("CoinsAmount");
+        PlayerPrefs.DeleteKey("ManaPoints");
+        PlayerPrefs.DeleteKey("MaxHitPoints");
+        PlayerPrefs.DeleteKey("MaxManaPoints");
+        PlayerPrefs.DeleteKey("MaxShieldPoints");
+        PlayerPrefs.DeleteKey("AttackDamage");
 
         PlayerPrefs.DeleteKey("HitPoints");
+        PlayerPrefs.DeleteKey("ManaPoints");
         _canvas.SetActive(false);
         _loading.AnimationEventRun();
         Invoke(nameof(LoadLevel), 2.2f);
     }
-
+    
     private void LoadLevel()
     {
         SceneManager.LoadScene(_levelToLoad);
