@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ButtonBuy : MonoBehaviour
 {
     [SerializeField] private Button _button;
+    [SerializeField] private AudioSource _buySound;
     [SerializeField] private PlayerMover _player;
     [SerializeField] private Text _text;
 
@@ -27,6 +28,7 @@ public class ButtonBuy : MonoBehaviour
     {
         if (_player.CoinsAmount >= _price)
         {
+            _buySound.Play();
             _player.CoinsAmount -= _price;
 
             if (_button.name == HEAL_POTION)

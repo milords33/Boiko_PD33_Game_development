@@ -158,7 +158,7 @@ new Vector2(_attackRadius, _attackRadius), _whatIsPlayer);
             if (player != null)
                 player.TakeDamage(_damage, _pushPower, transform.position.x);
         }
-        Invoke(nameof(InvokeMovement), 1f);
+        Invoke(nameof(InvokeMovement), 0.8f);
     }
     
     private void InvokeMovement()
