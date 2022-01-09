@@ -2324,6 +2324,7 @@ MonoBehaviour:
   _musicSlider: {fileID: 3364203173519532219}
   _effectsSlider: {fileID: 4213428845011848247}
   _saveAudioPreferences: {fileID: 6873814579302514862}
+  _currentMenu: {fileID: 3364203173024542531}
 --- !u!1 &3364203173058091628
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,7 +16,7 @@ public class ButtonSelectLevel : MonoBehaviour
 
     private void OnButtonClickHandler()
     {
-        _loadMenu.SetActive(true);
         _mainMenu.SetActive(false);
+        _loadMenu.SetActive(true);
     }
 }

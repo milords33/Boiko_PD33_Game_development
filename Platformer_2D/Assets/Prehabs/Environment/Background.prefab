@@ -45,6 +45,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4462485293165093414}
   - component: {fileID: 4462485293165093415}
+  - component: {fileID: 4796254843640623283}
   m_Layer: 0
   m_Name: background3
   m_TagString: Untagged
@@ -116,6 +117,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4796254843640623283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4462485293165093433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a13b0b8c8c518c45a118f41b8fad2bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followingTarget: {fileID: 0}
+  parallaxStrength: 0.6
+  disableVerticalParallax: 0
 --- !u!1 &4462485293289500084
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,6 +142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4462485293289500085}
   - component: {fileID: 4462485293289500082}
+  - component: {fileID: 6211481091331756108}
   m_Layer: 0
   m_Name: background1
   m_TagString: Untagged
@@ -197,6 +214,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6211481091331756108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4462485293289500084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a13b0b8c8c518c45a118f41b8fad2bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followingTarget: {fileID: 0}
+  parallaxStrength: 0.9
+  disableVerticalParallax: 0
 --- !u!1 &4462485293612236832
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,6 +239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4462485293612236833}
   - component: {fileID: 4462485293612236846}
+  - component: {fileID: 2988088509118038190}
   m_Layer: 0
   m_Name: background4
   m_TagString: Untagged
@@ -278,6 +311,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2988088509118038190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4462485293612236832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a13b0b8c8c518c45a118f41b8fad2bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followingTarget: {fileID: 0}
+  parallaxStrength: 0.4
+  disableVerticalParallax: 0
 --- !u!1 &4462485293934446835
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +336,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4462485293934446832}
   - component: {fileID: 4462485293934446833}
+  - component: {fileID: 6153169355411541700}
   m_Layer: 0
   m_Name: background2
   m_TagString: Untagged
@@ -359,6 +408,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6153169355411541700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4462485293934446835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a13b0b8c8c518c45a118f41b8fad2bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followingTarget: {fileID: 0}
+  parallaxStrength: 0.7
+  disableVerticalParallax: 0
 --- !u!1 &4462485294700141571
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,6 +433,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4462485294700141568}
   - component: {fileID: 4462485294700141569}
+  - component: {fileID: 6960979896149675357}
   m_Layer: 0
   m_Name: background5
   m_TagString: Untagged
@@ -440,3 +505,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6960979896149675357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4462485294700141571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a13b0b8c8c518c45a118f41b8fad2bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followingTarget: {fileID: 0}
+  parallaxStrength: 0.2
+  disableVerticalParallax: 0

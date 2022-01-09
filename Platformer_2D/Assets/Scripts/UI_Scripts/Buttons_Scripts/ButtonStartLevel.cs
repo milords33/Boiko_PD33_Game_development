@@ -7,13 +7,19 @@ using UnityEngine.SceneManagement;
 public class ButtonStartLevel : MonoBehaviour
 {
     [SerializeField] private Button _button;
-    [SerializeField] private int _levelToLoad;
     [SerializeField] private LoadFromMainMenu _loading;
     [SerializeField] private GameObject _canvas;
 
-    private const string NEWGAME = "ButtonNewGame";
-    private const string LEVEL1 = "ButtonLevel1";
+    private string _levelToLoad;
 
+    public string LevelToLoad
+    {
+        get => _levelToLoad;
+        set
+        {
+            _levelToLoad = value;
+        }
+    }
     private void Awake()
     {
         _button.onClick.AddListener(OnButtonClickHandler);
@@ -33,11 +39,18 @@ public class ButtonStartLevel : MonoBehaviour
         PlayerPrefs.DeleteKey("ManaPoints");
         _canvas.SetActive(false);
         _loading.AnimationEventRun();
-        Invoke(nameof(LoadLevel), 2.2f);
+        Invoke(nameof(InvokeLoadLevel), 2.2f);
     }
     
-    private void LoadLevel()
+    private void InvokeLoadLevel()
     {
         SceneManager.LoadScene(_levelToLoad);
+    }
+
+    public void LoadLevel()
+    {
+        _canvas.SetActive(false);
+        _loading.AnimationEventRun();
+        Invoke(nameof(InvokeLoadLevel), 2.2f);
     }
 }

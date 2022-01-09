@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ButtonBack : MonoBehaviour
 {
     [SerializeField] private GameObject _currentMenu;
-    [SerializeField] private GameObject _mainMenu;
+    [SerializeField] private GameObject _previousMenu;
     [SerializeField] private Button _button;
 
     private void Awake()
@@ -23,6 +23,6 @@ public class ButtonBack : MonoBehaviour
     private void OnButtonClickHandler()
     {
         _currentMenu.SetActive(false);
-        _mainMenu.SetActive(true);
+        _previousMenu.SetActive(true);
     }
 }
