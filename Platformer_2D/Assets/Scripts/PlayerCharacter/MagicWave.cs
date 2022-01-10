@@ -38,6 +38,10 @@ public class MagicWave : MonoBehaviour
         BloodySkeleton bloodySkeleton = other.GetComponent<BloodySkeleton>();
         if (bloodySkeleton != null)
             bloodySkeleton.TakeDamage(_damage);
+
+        BanditBoss banditBoss = other.GetComponent<BanditBoss>();
+        if (banditBoss != null)
+            banditBoss.TakeDamage(_damage*2);
     }
 
     private void Destroy()

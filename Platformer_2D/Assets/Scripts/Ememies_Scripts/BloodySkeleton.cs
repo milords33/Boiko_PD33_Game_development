@@ -59,13 +59,14 @@ public class BloodySkeleton : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        PlayerMover player = other.collider.GetComponent<PlayerMover>();
-        if (player != null)
+        if (!_death)
         {
-            player.TakeDamage(_damage, _pushPower, transform.position.x);
-            TakeDamage(_maxHitPoints);
-            _speed = 0f;
-            Invoke(nameof(SetStartSpeed), 2f);
+            PlayerMover player = other.collider.GetComponent<PlayerMover>();
+            if (player != null)
+            {
+                player.TakeDamage(_damage, _pushPower, transform.position.x);
+                TakeDamage(_maxHitPoints);
+            }
         }
     }
 

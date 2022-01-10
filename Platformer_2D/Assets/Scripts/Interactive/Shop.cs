@@ -59,7 +59,7 @@ public class Shop : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        _player = null;
+        _player.Trade = false;
         _mainCanvas.SetActive(false);
     }
 

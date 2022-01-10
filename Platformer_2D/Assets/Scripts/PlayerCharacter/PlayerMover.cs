@@ -449,6 +449,10 @@ public class PlayerMover : MonoBehaviour
             BloodySkeleton bloodySkeleton = target.GetComponent<BloodySkeleton>();
             if (bloodySkeleton != null)
                 bloodySkeleton.TakeDamage(_attackDamage);
+
+            BanditBoss banditBoss = target.GetComponent<BanditBoss>();
+            if (banditBoss != null)
+                banditBoss.TakeDamage(_attackDamage);
         }
         _animator.SetBool(_attackAnimatorKey, false);
         _needToAttack = false;
