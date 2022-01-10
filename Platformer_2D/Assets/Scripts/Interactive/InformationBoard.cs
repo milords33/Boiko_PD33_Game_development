@@ -39,7 +39,6 @@ public class InformationBoard : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         _player.Trade = false;
-        //_player = null;
         _canvas.SetActive(false);
     }
 

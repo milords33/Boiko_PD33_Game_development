@@ -7,10 +7,13 @@ public class BanditBoss : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
     [SerializeField] private GameObject _banditBoss;
-    [SerializeField] private GameObject _leftDashAttackElement;
-    [SerializeField] private GameObject _rightDashAttackElement;
+    [SerializeField] private GameObject _dashAttackElement;
+    [SerializeField] private GameObject[] _armyOfEnemies;
+    [SerializeField] private GameObject[] _newArmyOfEnemies;
+    [SerializeField] private GameObject _nextLevel;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private Transform _player;
+    [SerializeField] private LayerMask _whatIsPlayer;
     [SerializeField] private float _viewingDistance;
     [SerializeField] private float _speed;
     [SerializeField] private float _pushPower;
@@ -25,30 +28,57 @@ public class BanditBoss : MonoBehaviour
     [SerializeField] private string _dashAttackAnimatorKey;
     [SerializeField] private string _chasingAnimatorKey;
     [SerializeField] private string _attackAnimatorKey;
-   // [SerializeField] private string _deathAnimatorKey;
+    [SerializeField] private string _deathAnimatorKey;
+
 
     private int _currentHitPoints;
     private float _startSpeed;
-    private bool _attack = false;
+    private float _dashSpeed;
+    private bool _attack;
     private bool _death = false;
-    private bool _dashAttackBool = true;
+    private bool _dashAttackBool;
+    private bool _canFlip;
+
+    private bool _stage1;
+    private bool _stage2;
 
     void Start()
     {
+        _stage1 = true;
+        _stage2 = true;
+        _canFlip = true;
+        _dashAttackBool = true;
+        _attack = false;
         _startSpeed = _speed;
+        _dashSpeed = _speed * 3f;
         _hitPointsSlider.maxValue = _maxHitPoints;
         ChangeHitPoints(_maxHitPoints);
+
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
+        if(_stage1 && _currentHitPoints <= _maxHitPoints/2)
+        {
+            for(int i = 0; i <_armyOfEnemies.Length; i++)
+                _armyOfEnemies[i].SetActive(true);
+            _stage1 = false;
+        }
+
+/*        if (_stage2 && _currentHitPoints < _maxHitPoints / 2)
+        {
+            for (int i = 0; i < _newArmyOfEnemies.Length; i++)
+                _newArmyOfEnemies[i].SetActive(true);
+            _stage2 = false;
+        }*/
+
         if (_dashAttackBool)
         {
             float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
-
             if (distanceToPlayer < _viewingDistance)
-            {
+            {   
+                _hitPointsSlider.gameObject.SetActive(true);
                 MadeDashAttack();
             }
         }
@@ -63,19 +93,80 @@ public class BanditBoss : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void MadeDashAttack()
     {
-        PlayerMover player = collision.GetComponent<PlayerMover>();
-        if (player != null)
+        _animator.SetBool(_dashAttackAnimatorKey, true);
+        _dashAttackElement.SetActive(true);
+        if (_canFlip)
         {
-            _attack = true;
-            _speed = 0f;
-            _animator.SetTrigger(_attackAnimatorKey);
+            if (_player.position.x < transform.position.x)
+            {
+                _rigidbody.velocity = new Vector2(-_dashSpeed, 0);
+                if (_faceRight)
+                    Flip();
+            }
+
+            else if (_player.position.x > transform.position.x)
+            {
+                _rigidbody.velocity = new Vector2(_dashSpeed, 0);
+                if (!_faceRight)
+                    Flip();
+            }
+        }
+    }
+    private void AnimationEventEndDashAttack()
+    {
+        _dashAttackBool = false;
+        _dashAttackElement.SetActive(false);
+        _animator.SetBool(_dashAttackAnimatorKey, false);
+        _animator.SetBool(_chasingAnimatorKey, true);
+        Invoke(nameof(PrepareForDashAttack), 5f);
+    }
+
+    private void StartChasing()
+    {
+        if (_canFlip)
+        {
+            if (_player.position.x < transform.position.x)
+            {
+                _rigidbody.velocity = new Vector2(-_speed, 0);
+                if (_faceRight)
+                    Flip();
+            }
+
+            else if (_player.position.x > transform.position.x)
+            {
+                _rigidbody.velocity = new Vector2(_speed, 0);
+                if (!_faceRight)
+                    Flip();
+            }
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+
+    private void OnTriggerStay2D(Collider2D other)
     {
+        PlayerMover player = other.GetComponent<PlayerMover>();
+        if (player != null && !_dashAttackBool && !_attack)
+        {
+            _animator.SetTrigger(_attackAnimatorKey);
+            _speed = 0f;
+            _attack = true;
+        }
+    }
+
+    private void AnimationEventSimpleAttack()
+    {
+        Collider2D[] targets = Physics2D.OverlapBoxAll(_attackPoint.position,
+            new Vector2(_attackRadius, _attackRadius), _whatIsPlayer);
+
+        foreach(var target in targets)
+        {
+            PlayerMover player = target.GetComponent<PlayerMover>();
+            if (player != null)
+                player.TakeDamage(_damage, _pushPower, transform.position.x);
+        }
+        _attack = false;
         _speed = _startSpeed;
     }
 
@@ -91,7 +182,7 @@ public class BanditBoss : MonoBehaviour
         if (_currentHitPoints <= 0)
         {
             _death = true;
-           // _animator.SetTrigger(_deathAnimatorKey);
+            _animator.SetTrigger(_deathAnimatorKey);
         }
         _hitPointsSlider.value = hitPoints;
     }
@@ -100,59 +191,14 @@ public class BanditBoss : MonoBehaviour
     {
         _faceRight = !_faceRight;
         transform.Rotate(0, 180, 0);
-        _hitPointsSlider.transform.Rotate(0, 180, 0);
+        _canFlip = false;
+
+        Invoke(nameof(CreateDelayForFlip), 0.2f);
     }
 
-    private void MadeDashAttack()
+    private void CreateDelayForFlip()
     {
-        _animator.SetBool(_dashAttackAnimatorKey, true);
-
-        if (_player.position.x < transform.position.x)
-        {
-            _rigidbody.velocity = new Vector2(-_speed, 0);
-            if (_faceRight)
-            {
-                Flip();
-                _leftDashAttackElement.SetActive(true);
-            }
-        }
-
-        else if (_player.position.x > transform.position.x)
-        {
-            _rigidbody.velocity = new Vector2(_speed, 0);
-            if (!_faceRight)
-            {
-                Flip();
-                _rightDashAttackElement.SetActive(true);
-            }
-        }
-    }
-    private void StartChasing()
-    {
-        _animator.SetBool(_chasingAnimatorKey, true);
-        if (_player.position.x < transform.position.x )
-        {
-            _rigidbody.velocity = new Vector2(-_speed/4, 0);
-            if (_faceRight)
-                Flip();
-        }
-
-        else if (_player.position.x > transform.position.x)
-        {
-            _rigidbody.velocity = new Vector2(_speed/4, 0);
-            if (!_faceRight)
-                Flip();
-        }
-    }
-
-
-    private void AnimationEventEndDashAttack()
-    {
-        _dashAttackBool = false;
-        _leftDashAttackElement.SetActive(false);
-        _rightDashAttackElement.SetActive(false);
-        _animator.SetBool(_dashAttackAnimatorKey, false);
-        Invoke(nameof(PrepareForDashAttack), 5f);
+        _canFlip = true;
     }
 
     private void PrepareForDashAttack()
@@ -160,13 +206,14 @@ public class BanditBoss : MonoBehaviour
         _dashAttackBool = true;
     }
 
-    private void SetStartSpeed()
-    {
-        _speed = _startSpeed;
-    }
-
     public void TakeDamage(int damage)
     {
         ChangeHitPoints(_currentHitPoints - damage);
+    }
+
+    private void AnimationEventDeath()
+    {
+        _nextLevel.SetActive(true);
+        Destroy(_banditBoss.gameObject);
     }
 }
