@@ -61,17 +61,15 @@ public class BanditBoss : MonoBehaviour
     {
         if(_stage1 && _currentHitPoints <= _maxHitPoints/2)
         {
-            for(int i = 0; i <_armyOfEnemies.Length; i++)
-                _armyOfEnemies[i].SetActive(true);
+            _armyOfEnemies[0].SetActive(true);
             _stage1 = false;
         }
 
-/*        if (_stage2 && _currentHitPoints < _maxHitPoints / 2)
+        if (_stage2 && _currentHitPoints < _maxHitPoints / 4)
         {
-            for (int i = 0; i < _newArmyOfEnemies.Length; i++)
-                _newArmyOfEnemies[i].SetActive(true);
+            _armyOfEnemies[1].SetActive(true);
             _stage2 = false;
-        }*/
+        }
 
         if (_dashAttackBool)
         {
@@ -192,7 +190,6 @@ public class BanditBoss : MonoBehaviour
         _faceRight = !_faceRight;
         transform.Rotate(0, 180, 0);
         _canFlip = false;
-
         Invoke(nameof(CreateDelayForFlip), 0.2f);
     }
 

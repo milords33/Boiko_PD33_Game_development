@@ -23,6 +23,10 @@ public class MagicWave : MonoBehaviour
         if (bandit != null)
             bandit.TakeDamage(_damage, _pushPower);
 
+        LightBandit lightBandit = other.GetComponent<LightBandit>();
+        if (lightBandit != null)
+            lightBandit.TakeDamage(_damage);
+
         EnemyArcher archer = other.GetComponent<EnemyArcher>();
         if (archer != null)
             archer.TakeDamage(_damage);

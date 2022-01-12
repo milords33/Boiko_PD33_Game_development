@@ -437,7 +437,11 @@ public class PlayerMover : MonoBehaviour
             Bandits bandit = target.GetComponent<Bandits>();
             if (bandit != null) 
                 bandit.TakeDamage(_attackDamage, _swordAttackPushPower, transform.position.x);
-            
+
+            LightBandit lightBandit = target.GetComponent<LightBandit>();
+            if (lightBandit != null)
+                lightBandit.TakeDamage(_attackDamage);
+
             ArrowLauncher arrowLauncer = target.GetComponent<ArrowLauncher>();
             if (arrowLauncer != null)
                 arrowLauncer.TakeDamage(_attackDamage);
