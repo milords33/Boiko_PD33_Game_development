@@ -30,6 +30,10 @@ public class BanditBoss : MonoBehaviour
     [SerializeField] private string _attackAnimatorKey;
     [SerializeField] private string _deathAnimatorKey;
 
+    [Header("Effects")]
+    [SerializeField] private GameObject _dashAttackEffect;
+    [SerializeField] private GameObject _hitEffect;
+
 
     private int _currentHitPoints;
     private float _startSpeed;
@@ -71,7 +75,7 @@ public class BanditBoss : MonoBehaviour
             _stage2 = false;
         }
 
-        if (_dashAttackBool)
+        if (_dashAttackBool && !_attack)
         {
             float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
             if (distanceToPlayer < _viewingDistance)
@@ -93,6 +97,11 @@ public class BanditBoss : MonoBehaviour
 
     private void MadeDashAttack()
     {
+        if (_faceRight)
+            Instantiate(_dashAttackEffect, transform.position + new Vector3(1.3f, -0.05f, 0), Quaternion.identity);
+        else
+            Instantiate(_dashAttackEffect, transform.position + new Vector3(-1.3f, -0.05f, 0), Quaternion.identity);
+
         _animator.SetBool(_dashAttackAnimatorKey, true);
         _dashAttackElement.SetActive(true);
         if (_canFlip)
@@ -205,6 +214,7 @@ public class BanditBoss : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        Instantiate(_hitEffect, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
         ChangeHitPoints(_currentHitPoints - damage);
     }
 

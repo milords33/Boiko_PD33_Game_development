@@ -307,7 +307,7 @@ PrefabInstance:
     - target: {fileID: 1651314402417245959, guid: a2aace9bd9624424f843c6f4e6402262,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1651314402417245959, guid: a2aace9bd9624424f843c6f4e6402262,
         type: 3}
@@ -1480,7 +1480,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139665878}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 56.85, y: -3.22, z: -8.913345}
+  m_LocalPosition: {x: 56.85, y: -3.25, z: -8.913345}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 534626766}
@@ -1533,11 +1533,11 @@ MonoBehaviour:
   _newArmyOfEnemies: []
   _nextLevel: {fileID: 539778676}
   _attackPoint: {fileID: 497745673}
-  _player: {fileID: 1568936368}
+  _player: {fileID: 1304441711}
   _whatIsPlayer:
     serializedVersion: 2
     m_Bits: 512
-  _viewingDistance: 12
+  _viewingDistance: 7
   _speed: 4
   _pushPower: 100
   _attackRadius: 1.79
@@ -1550,6 +1550,10 @@ MonoBehaviour:
   _chasingAnimatorKey: Chasing
   _attackAnimatorKey: SimpleAttack
   _deathAnimatorKey: Death
+  _dashAttackEffect: {fileID: 2587179449698161540, guid: e4602df32f0ee7f45860459077182d82,
+    type: 3}
+  _hitEffect: {fileID: 2230244235296780936, guid: 622ce55414c56814b8604c290e7ebb51,
+    type: 3}
 --- !u!95 &1220488981
 Animator:
   serializedVersion: 3
@@ -1627,7 +1631,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220488979}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 69.8, y: -3.04, z: 0}
+  m_LocalPosition: {x: 69.8, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1682939626}
@@ -1969,6 +1973,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fed3d6fcebe3a84e973328c276d2dad, type: 3}
+--- !u!4 &1304441711 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3364203173406426823, guid: abd73d281ce3176478d4d85e60d6de1c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1222027469}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1359116040
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15498,6 +15508,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: lightBandit1
       objectReference: {fileID: 0}
+    - target: {fileID: 6593963006327880838, guid: f0857fe2ce34bc349b507a4219b54cdb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0857fe2ce34bc349b507a4219b54cdb, type: 3}
 --- !u!82 &2088623542 stripped
@@ -15919,11 +15934,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787735459232627279}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.4677782, y: -0.23999977, z: -10}
+  m_LocalPosition: {x: 2.4675999, y: -0.23999977, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2908706569183496666
 SpriteRenderer:
@@ -16052,7 +16067,7 @@ Transform:
   - {fileID: 3870413464563408786}
   - {fileID: 4642919934360890557}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &3870413464563408786
 Transform:
@@ -16200,7 +16215,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4676165753926895709}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.4677782, y: -0.23999977, z: -10}
+  m_LocalPosition: {x: 2.4675999, y: -0.23999977, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4676165753515525396}
@@ -16288,7 +16303,7 @@ PrefabInstance:
     - target: {fileID: 995100777098361705, guid: e197d89d9423429439cb53e1b7cf5983,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 995100777098361705, guid: e197d89d9423429439cb53e1b7cf5983,
         type: 3}

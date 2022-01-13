@@ -99,6 +99,7 @@ public class PlayerMover : MonoBehaviour
     private int _currentHitPoints;
     private int _currentManaPoints;
 
+    private bool _blockDamage = false;
     private bool _magicCast = false;
     private bool _shieldActive;
     private bool _hurt;
@@ -485,6 +486,11 @@ public class PlayerMover : MonoBehaviour
             _attackDamage = STANDART_CHARACTERISTICS/2;
     }
 
+    private void SetBlockDamageFalse()
+    {
+        _blockDamage = false;
+    }
+
 
     #region Funcions for animations
     private void AnimationEventResetRoll()
@@ -530,9 +536,14 @@ public class PlayerMover : MonoBehaviour
         if (_animator.GetBool(_hurtAnimatorKey))
             return;
 
+        if (_blockDamage && _shieldActive)
+            return;
+
         if (_shieldActive && CurrentShieldPoints > 0)
         {
             CurrentShieldPoints -= SHIELD_PROTECT_POINTS;
+            _blockDamage = true;
+            Invoke(nameof(SetBlockDamageFalse), 0.01f);
             _shieldProtected.Play();
             Invoke(nameof(RestoreShieldPoints), 15f);
         }
