@@ -43,7 +43,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 2149044176674734566, guid: 0fead15c4b48d6742a19eba3813ddbad,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 3c5f7e19408b4cb43b0e450fed7bc867, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.36
   m_Pitch: 1
   Loop: 1
@@ -137,6 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3407753859687935160}
+  - component: {fileID: 4121825643924787416}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -160,6 +161,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4121825643924787416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3407753859687935159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f981e1425cf8dbb4e831dd775b14885c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _backgroundMusic: {fileID: 3407753859568382800}
+  _bossFightMusic: {fileID: 0}
 --- !u!1 &3407753859755818163
 GameObject:
   m_ObjectHideFlags: 0

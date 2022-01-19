@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4630746222584316637}
   - component: {fileID: 3195712326936753790}
   - component: {fileID: 6827883345807256213}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 2009185790527905265}
   - component: {fileID: 2009185790527905271}
   - component: {fileID: 2009185790527905266}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Bandit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,6 @@ MonoBehaviour:
   _hitEffect: {fileID: 2230244235296780936, guid: 622ce55414c56814b8604c290e7ebb51,
     type: 3}
   _player: {fileID: 3364203173809307778, guid: abd73d281ce3176478d4d85e60d6de1c, type: 3}
-  _collider: {fileID: 2009185790527905265}
   _walkRange: 3.05
   _speed: 5
   _maxHitPoints: 100
@@ -289,7 +288,7 @@ GameObject:
   - component: {fileID: 4202568559450502388}
   - component: {fileID: 8035381724352987742}
   - component: {fileID: 5542690799090038935}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +360,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8989741495763236432}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -392,7 +391,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3706242183725171291}
   - component: {fileID: 8843564892382625373}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BanditHitPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,7 +480,7 @@ GameObject:
   - component: {fileID: 5878299891704561890}
   - component: {fileID: 6700390199174472247}
   - component: {fileID: 55255234305559869}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +552,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9072344999342223697}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}

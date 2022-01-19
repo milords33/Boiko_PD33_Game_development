@@ -228,7 +228,7 @@ public class PlayerMover : MonoBehaviour
         if (PlayerPrefs.HasKey("ManaPoints"))
         {
             CurrentManaPoints = PlayerPrefs.GetInt("ManaPoints");
-            int count = System.Convert.ToInt32(_manaPointsSlider.maxValue / 25 - 4);
+            int count = System.Convert.ToInt32(_manaPointsSlider.maxValue / 100 - 1);
             RectTransform rectTransfrom = _manaPointsSlider.GetComponent<RectTransform>();
             for (int i = 0; i < count; i++)
             {

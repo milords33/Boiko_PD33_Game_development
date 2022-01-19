@@ -150,7 +150,7 @@ public class Bandits : MonoBehaviour
     private void AnimationEventAttack()
     { 
         Collider2D[] targets = Physics2D.OverlapBoxAll(_attackPoint.position,
-                                new Vector2(_attackRadius, _attackRadius), _whatIsPlayer);
+           new Vector2(_attackRadius, _attackRadius), _whatIsPlayer);
 
         foreach (var target in targets)
         {

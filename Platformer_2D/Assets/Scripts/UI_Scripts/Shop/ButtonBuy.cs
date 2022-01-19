@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ButtonBuy : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class ButtonBuy : MonoBehaviour
     [SerializeField] private Image _buttonImage;
     [SerializeField] private AudioSource _buySound;
     [SerializeField] private PlayerMover _player;
-    [SerializeField] private Text _text;
+    [SerializeField] private TextMeshProUGUI _textPrice;
 
     private int _price;
 
@@ -22,7 +23,7 @@ public class ButtonBuy : MonoBehaviour
 
     private void Awake()
     {
-        _price = System.Convert.ToInt32(_text.text);
+        _price = System.Convert.ToInt32(_textPrice.text);
         _button.onClick.AddListener(OnButtonClickHandler);
     }
 
@@ -73,7 +74,7 @@ public class ButtonBuy : MonoBehaviour
 
     private void IncreaseManaPotion()
     {
-        _player.ChangeSliderValue("Slider_ManaPoints", 25);
+        _player.ChangeSliderValue("Slider_ManaPoints", 100);
         _shop.DestroyProducts("IncreaseManaPotion");
     }
 
