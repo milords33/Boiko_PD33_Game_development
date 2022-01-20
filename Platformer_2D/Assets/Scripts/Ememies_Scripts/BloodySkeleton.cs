@@ -34,6 +34,7 @@ public class BloodySkeleton : MonoBehaviour
         _startSpeed = _speed;
         _hitPointsSlider.maxValue = _maxHitPoints;
         ChangeHitPoints(_maxHitPoints);
+        _hitPointsSlider.gameObject.SetActive(false);
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
@@ -68,6 +69,12 @@ public class BloodySkeleton : MonoBehaviour
                 TakeDamage(_maxHitPoints);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_bloodySkeleton.transform.position, new Vector3(_viewingDistance*2, 1, 0));
     }
 
 
@@ -125,6 +132,12 @@ public class BloodySkeleton : MonoBehaviour
     private void AnimationEventEmergence()
     {
         _emergence = true;
+        _hitPointsSlider.gameObject.SetActive(true);
+    }
+
+    private void AnimationEventDisappearing()
+    {
+        _hitPointsSlider.gameObject.SetActive(false);
     }
 
     private void AnimationEventDeathInFight()

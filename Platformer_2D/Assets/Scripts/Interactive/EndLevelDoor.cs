@@ -12,6 +12,7 @@ public class EndLevelDoor : MonoBehaviour
     [SerializeField] private GameObject _interactionButton;
 
     private PlayerMover _player;
+    private bool _nextLevelIsActive = false;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -35,8 +36,9 @@ public class EndLevelDoor : MonoBehaviour
 
     private void OnTriggerStay2D()
     {
-        if (Input.GetKey(KeyCode.E) && _player!=null)
+        if (Input.GetKey(KeyCode.E) && _player!=null && !_nextLevelIsActive)
         {
+            _nextLevelIsActive = true;
             _spriteRenderer.sprite = _doorOpenSprite;
             _openDoorSound.Play();
             SaveProgress(_player);

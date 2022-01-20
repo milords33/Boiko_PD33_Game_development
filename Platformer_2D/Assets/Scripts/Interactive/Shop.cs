@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Shop : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Shop : MonoBehaviour
     [SerializeField] private GameObject _tradeMenu;
     [SerializeField] private Button _interactiveButton;
     [SerializeField] private Button _cancelButton;
+    [SerializeField] private TextMeshProUGUI _coinsValue;
 
     [Header("ShopObject")]
     [SerializeField] private GameObject _greenFruit;
@@ -27,6 +29,12 @@ public class Shop : MonoBehaviour
     private void Awake()
     {
         _cancelButton.onClick.AddListener(OnButtonClickHandler);
+    }
+
+    private void Update()
+    {
+        if (_player != null)
+            _coinsValue.text = System.Convert.ToString(_player.CoinsAmount);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -54,7 +62,6 @@ public class Shop : MonoBehaviour
 
             _player.Trade = false;
         }
-            
     }
 
     private void OnTriggerExit2D(Collider2D collision)

@@ -109,6 +109,8 @@ public class PlayerMover : MonoBehaviour
     private bool _checkActiveMenuPanel = false;
     private bool _trade = false;
 
+    public bool Dialogue { get; set; } = false;
+
     public float SwordAttackPushPower { get; set; }
 
     public int CoinsAmount

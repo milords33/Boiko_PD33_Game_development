@@ -14,6 +14,7 @@ public class TeleportDoor : MonoBehaviour
     [SerializeField] private float _posY;
 
     private PlayerMover _player = null;
+    private bool _teleportIsActive = false;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -23,8 +24,9 @@ public class TeleportDoor : MonoBehaviour
     }
     private void OnTriggerStay2D()
     {
-        if (Input.GetKey(KeyCode.E) && _player != null)
+        if (Input.GetKey(KeyCode.E) && _player != null && !_teleportIsActive)
         {
+            _teleportIsActive = true;
             _spriteRenderer.sprite = _doorOpenSprite;
             _openDoorSound.Play();
             Invoke(nameof(Teleport), 1f);
