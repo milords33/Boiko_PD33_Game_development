@@ -34,6 +34,7 @@ public class ButtonStartLevel : MonoBehaviour
         PlayerPrefs.DeleteKey("MaxManaPoints");
         PlayerPrefs.DeleteKey("MaxShieldPoints");
         PlayerPrefs.DeleteKey("AttackDamage");
+        PlayerPrefs.DeleteKey("BeginDialogue");
 
         PlayerPrefs.DeleteKey("HitPoints");
         PlayerPrefs.DeleteKey("ManaPoints");

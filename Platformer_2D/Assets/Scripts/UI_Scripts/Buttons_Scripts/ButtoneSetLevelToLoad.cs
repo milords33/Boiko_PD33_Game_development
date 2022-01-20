@@ -30,7 +30,6 @@ public class ButtoneSetLevelToLoad : MonoBehaviour
                 _startLevel.LevelToLoad = "Level_1";
                 _newGameConfirmationMenu.SetActive(true);
             }
-
             else
             {
                 _startLevel.LevelToLoad = _button.gameObject.name;

@@ -8,6 +8,7 @@ public class InformationBoard : MonoBehaviour
     [SerializeField] private GameObject _canvas;
     [SerializeField] private GameObject _textMenu;
     [SerializeField] private Button _button;
+    [SerializeField] private AudioSource _takeNoteSound;
 
     private PlayerMover _player = null;
 
@@ -27,6 +28,7 @@ public class InformationBoard : MonoBehaviour
         {
             _textMenu.SetActive(true);
             _player.Trade = true;
+            _takeNoteSound.Play();
         }
         if (Input.GetKey(KeyCode.Escape))
         {

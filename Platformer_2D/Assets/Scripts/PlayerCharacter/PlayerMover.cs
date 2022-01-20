@@ -12,13 +12,13 @@ public class PlayerMover : MonoBehaviour
     private Rigidbody2D _rigidbody;
 
     [Header("Player preferences")]
-    [SerializeField] private float _speed;
     [SerializeField] private float _rollForce;
     [SerializeField] private LayerMask _whatIsGround;
     [SerializeField] private LayerMask _whatIsCell;
     [SerializeField] private float _groundCheckerRadius;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _topBodyCheckerRadius;
+    [SerializeField] private float _speed;
 
     [Header("PlayerElements")]
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -26,7 +26,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private Transform _topBodyChecker;
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private Transform _shootPoint;
-    [SerializeField] private MagicWave  _magicWave;
+    [SerializeField] private MagicWave _magicWave;
 
     [Header("Attack")]
     [SerializeField] private LayerMask _whatIsEnemy;
@@ -109,9 +109,16 @@ public class PlayerMover : MonoBehaviour
     private bool _checkActiveMenuPanel = false;
     private bool _trade = false;
 
-    public bool Dialogue { get; set; } = false;
-
     public float SwordAttackPushPower { get; set; }
+
+    public float Speed
+    {
+        get => _speed;
+        set
+        {
+            _speed = value;
+        }
+    }
 
     public int CoinsAmount
     {
@@ -260,7 +267,10 @@ public class PlayerMover : MonoBehaviour
         if (Input.GetKey(KeyCode.R))
             ReloadScene();
 
-        if (!_death && !_magicCast)
+        if(_speed == 0)
+            _animator.SetFloat(_runAnimatorKey, 0);
+
+        if (!_death && !_magicCast && _speed != 0)
         {
             #region Movement
             _horizontalDirection = Input.GetAxisRaw("Horizontal");

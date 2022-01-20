@@ -131,7 +131,7 @@ PrefabInstance:
     - target: {fileID: 4106967144069191872, guid: 7fc30cd74f5aa724387df7546e0f3d5b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4106967144069191872, guid: 7fc30cd74f5aa724387df7546e0f3d5b,
         type: 3}
@@ -830,6 +830,7 @@ MonoBehaviour:
   _canvas: {fileID: 1713175951}
   _textMenu: {fileID: 339033753}
   _button: {fileID: 1561671273}
+  _takeNoteSound: {fileID: 260336362}
 --- !u!61 &229509954
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1170,6 +1171,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 256052358}
   m_CullTransparentMesh: 0
+--- !u!82 &260336362 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1554061686901607388, guid: 428ffd45fcfa65441a46c1a5ca93231d,
+    type: 3}
+  m_PrefabInstance: {fileID: 3407753859446870272}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &261567877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,7 +1450,7 @@ PrefabInstance:
     - target: {fileID: 3403412761271391291, guid: 5ca4ca811883b8940a3745e76d7a60ed,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3403412761271391291, guid: 5ca4ca811883b8940a3745e76d7a60ed,
         type: 3}
@@ -24455,6 +24462,7 @@ MonoBehaviour:
   _canvas: {fileID: 1279527564}
   _textMenu: {fileID: 1875772139}
   _button: {fileID: 1765178091}
+  _takeNoteSound: {fileID: 260336362}
 --- !u!61 &1800802210
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -24618,6 +24626,16 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 5032049767132524667, guid: e197d89d9423429439cb53e1b7cf5983,
+        type: 3}
+      propertyPath: _letNoteSound
+      value: 
+      objectReference: {fileID: 260336362}
+    - target: {fileID: 5032049767132524667, guid: e197d89d9423429439cb53e1b7cf5983,
+        type: 3}
+      propertyPath: _takeNoteSound
+      value: 
+      objectReference: {fileID: 260336362}
     - target: {fileID: 5032049768051129002, guid: e197d89d9423429439cb53e1b7cf5983,
         type: 3}
       propertyPath: m_IsActive
@@ -27804,7 +27822,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4446266598201974, guid: d10cbe6b249ddc34db2eae14d2ae9f3d, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4446266598201974, guid: d10cbe6b249ddc34db2eae14d2ae9f3d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -29276,7 +29294,7 @@ PrefabInstance:
     - target: {fileID: 2815896644941358833, guid: 7f6c0e6967a4fb047a1aa3e007441c1b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2815896644941358833, guid: 7f6c0e6967a4fb047a1aa3e007441c1b,
         type: 3}
@@ -29588,6 +29606,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3366979377718040956, guid: 428ffd45fcfa65441a46c1a5ca93231d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3407753859687935159, guid: 428ffd45fcfa65441a46c1a5ca93231d,
         type: 3}
       propertyPath: m_Name
@@ -29596,7 +29619,7 @@ PrefabInstance:
     - target: {fileID: 3407753859687935160, guid: 428ffd45fcfa65441a46c1a5ca93231d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3407753859687935160, guid: 428ffd45fcfa65441a46c1a5ca93231d,
         type: 3}
@@ -29647,6 +29670,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5585730053298217472, guid: 428ffd45fcfa65441a46c1a5ca93231d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 428ffd45fcfa65441a46c1a5ca93231d, type: 3}
@@ -29703,7 +29731,7 @@ PrefabInstance:
     - target: {fileID: 4462485292845143050, guid: 70906333cde5f6a48b4e9d2d43961b99,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4462485292845143050, guid: 70906333cde5f6a48b4e9d2d43961b99,
         type: 3}
@@ -30325,6 +30353,7 @@ MonoBehaviour:
   _canvas: {fileID: 5032049768357056390}
   _textMenu: {fileID: 5032049766832055036}
   _button: {fileID: 1233893682477397205}
+  _takeNoteSound: {fileID: 260336362}
 --- !u!114 &5032049768357056384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30770,6 +30799,7 @@ MonoBehaviour:
   _canvas: {fileID: 6788292171931212811}
   _textMenu: {fileID: 6788292172553171313}
   _button: {fileID: 114098188}
+  _takeNoteSound: {fileID: 260336362}
 --- !u!61 &6788292171374787489
 BoxCollider2D:
   m_ObjectHideFlags: 0

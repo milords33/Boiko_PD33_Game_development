@@ -39,7 +39,7 @@ public class Shop : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(_merchantLaughSound.isPlaying == false)
+        if(!_merchantLaughSound.isPlaying)
             _merchantLaughSound.Play();
         _player = collision.GetComponent<PlayerMover>();
         _mainCanvas.SetActive(true);

@@ -41,6 +41,7 @@ public class EndLevelDoor : MonoBehaviour
             _nextLevelIsActive = true;
             _spriteRenderer.sprite = _doorOpenSprite;
             _openDoorSound.Play();
+            PlayerPrefs.DeleteKey("BeginDialogue");
             SaveProgress(_player);
             Invoke(nameof(LoadNextScene), 1f);
         }

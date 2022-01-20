@@ -15,7 +15,6 @@ public class BanditBoss : MonoBehaviour
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private Transform _player;
     [SerializeField] private LayerMask _whatIsPlayer;
-    [SerializeField] private float _viewingDistance;
     [SerializeField] private float _speed;
     [SerializeField] private float _pushPower;
     [SerializeField] private float _attackRadius;
@@ -56,6 +55,8 @@ public class BanditBoss : MonoBehaviour
     private bool _stage1 = true;
     private bool _stage2 = true;
 
+    public float ViewingDistance { get; set; }
+
     void Start()
     {
         _startSpeed = _speed;
@@ -85,7 +86,7 @@ public class BanditBoss : MonoBehaviour
             if (_dashAttackBool && !_attack)
             {
                 float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
-                if (distanceToPlayer < _viewingDistance)
+                if (distanceToPlayer < ViewingDistance)
                 {
                     if (_beginFight)
                     {
@@ -100,7 +101,7 @@ public class BanditBoss : MonoBehaviour
             {
                 float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
 
-                if (distanceToPlayer < _viewingDistance)
+                if (distanceToPlayer < ViewingDistance)
                 {
                     StartChasing();
                 }
@@ -123,8 +124,6 @@ public class BanditBoss : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(_attackPoint.position, new Vector3(_attackRadius, _attackRadius, 0));
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(_banditBoss.transform.position, new Vector3(_viewingDistance * 2, 2f, 0));
     }
 
     private void MadeDashAttack()
