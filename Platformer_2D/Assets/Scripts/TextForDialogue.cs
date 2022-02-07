@@ -30,9 +30,9 @@ public class TextForDialogue : MonoBehaviour
             CreateText();
         }
 
-        if(!GameObjectIsActive && _textGameObject.text == _text)
+        if (!GameObjectIsActive && _textGameObject.text == _text)
         {
-            if(Input.GetKey(KeyCode.Mouse0) || Input.GetKey(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Return))
             {
                 _textPanel.SetActive(false);
 
@@ -47,6 +47,14 @@ public class TextForDialogue : MonoBehaviour
                     throw new System.Exception("Can't find dialogue data");
             }
         }
+            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Return))
+            {
+            if (_textGameObject.text != _text)
+                {
+                   _textGameObject.text = _text;
+                }
+            }
+        
     }
 
     private void CreateText()
@@ -63,10 +71,13 @@ public class TextForDialogue : MonoBehaviour
 
     IEnumerator TextCoroutine()
     {
-        foreach(char symbol in _text)
-        {
-            _textGameObject.text += symbol;
-            yield return new WaitForSeconds(0.05f);
-        }
+            foreach (char symbol in _text)
+            {
+                if (_textGameObject.text != _text)
+                {
+                     _textGameObject.text += symbol;
+                     yield return new WaitForSeconds(0.04f);
+                }
+            }
     }
 }
